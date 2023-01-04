@@ -1,34 +1,73 @@
+import { DateTimeEntity } from 'src/common/base-entity/date-time.entity';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'users' })
-export class User {
+export class User extends DateTimeEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    length: 30,
+  })
   first_name: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    length: 30,
+  })
   last_name: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    length: 50,
+    unique: true,
+  })
   email: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    length: 50,
+    unique: true,
+  })
   username: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    length: 255,
+  })
   password: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    length: 50,
+  })
   address: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    length: 15,
+  })
   phone_number: string;
 
-  @Column()
-  avatar: string;
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    length: 255,
+  })
+  avatar_path: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    length: 50,
+  })
   position: string;
 }

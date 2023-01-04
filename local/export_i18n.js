@@ -10,7 +10,7 @@ const COL_KEY = 'Key';
 const COL_JA = 'JA';
 const COL_EN = 'EN';
 
-const COL_CODE_ID = 'Screen ID';
+const COL_CODE_ID = 'Error ID';
 const COL_ERR_MSG_FILE_NAME = 'Level';
 const COL_APP_CODE = 'Application code';
 
@@ -46,7 +46,7 @@ function convert() {
       const [
         codeId,
         msgFileName,
-        appCode,
+        errorKey,
         errorJaTitle,
         errEnTitle,
         errJaMsgProd,
@@ -59,14 +59,18 @@ function convert() {
         const fileName = msgFileName.toLowerCase().replaceAll(' ', '-');
         jsonData[fileName] = jsonData[fileName] || { ja: {}, en: {} };
         jsonData[fileName].ja[codeId] = {
+          code_id: codeId,
+          app_code: errorKey,
           title: errorJaTitle.replaceAll('\n', ''),
-          prod: errJaMsgProd.replaceAll('\n', ''),
-          inter: errJaMsgInter.replaceAll('\n', ''),
+          prod: errJaMsgProd.replaceAll('\n', '').concat(' ' + codeId),
+          inter: errJaMsgInter.replaceAll('\n', '').concat(' ' + codeId),
         };
         jsonData[fileName].en[codeId] = {
+          code_id: codeId,
+          app_code: errorKey,
           title: errEnTitle.replaceAll('\n', ''),
-          prod: errEnMsgProd.replaceAll('\n', ''),
-          inter: errEnMsgInter.replaceAll('\n', ''),
+          prod: errEnMsgProd.replaceAll('\n', '').concat(' ' + codeId),
+          inter: errEnMsgInter.replaceAll('\n', '').concat(' ' + codeId),
         };
       }
     }
@@ -108,7 +112,7 @@ function transform(sheet, row, index) {
 function transformErrMsg(sheet, row, index) {
   const fileName = row[COL_ERR_MSG_FILE_NAME];
   const codeId = row[COL_CODE_ID] || '';
-  const appCode = row[COL_APP_CODE] || '';
+  const errorKey = row[COL_APP_CODE] || '';
   const errorJaTitle = row[COL_JA_TITLE] || '';
   const errEnTitle = row[COL_EN_TITLE] || '';
   const errJaMsgProd = row[COL_ERR_JA_MSG_PROD] || '';
@@ -125,7 +129,7 @@ function transformErrMsg(sheet, row, index) {
 
   switch (true) {
     case !fileName &&
-      !appCode &&
+      !errorKey &&
       !errorJaTitle &&
       !errEnTitle &&
       !errJaMsgProd &&
@@ -136,7 +140,7 @@ function transformErrMsg(sheet, row, index) {
     case !fileName:
       console.log(fileName);
       throw error(COL_ERR_MSG_FILE_NAME);
-    case !appCode:
+    case !errorKey:
       throw error(COL_APP_CODE);
     case !errorJaTitle:
       throw error(COL_JA_TITLE);
@@ -154,7 +158,7 @@ function transformErrMsg(sheet, row, index) {
       return [
         codeId,
         fileName,
-        appCode,
+        errorKey,
         errorJaTitle,
         errEnTitle,
         errJaMsgProd,
