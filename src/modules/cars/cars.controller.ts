@@ -1,18 +1,18 @@
-import { Controller, Get, Headers, Param, Query, Res } from '@nestjs/common';
+import { Controller, Get, Headers, Param, Query } from '@nestjs/common';
 import { CarsService } from './cars.service';
-import { Response } from 'express';
 import { TransformPlainToInstance, plainToClass } from 'class-transformer';
-import { CarResponseDto } from './dto/car-response.dto';
+import { CarsDto } from './dto/cas.dto';
 
 @Controller('cars')
 export class CarsController {
   constructor(private readonly carsService: CarsService) {}
 
   @Get()
-  @TransformPlainToInstance(CarResponseDto)
+  @TransformPlainToInstance(CarsDto)
   async findAll(@Query() query, @Headers('accept-language') lang) {
     const { data, panigation } = await this.carsService.findAll(query, lang);
-    return data;
+
+    return { items: data };
   }
 
   @Get(':id')
