@@ -3,7 +3,13 @@ import { CarImage } from 'src/modules/car-images/entities/car-image.entity';
 import { CarLocation } from 'src/modules/car-locations/entities/car-location.entity';
 import { CarTranslation } from 'src/modules/car-translations/entities/car-translation.entity';
 import { CarType } from 'src/modules/car-types/entities/car-type.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity({
   name: 'cars',
@@ -44,10 +50,10 @@ export class Car extends DateTimeEntity {
   })
   car_locations: CarLocation[];
 
-  @OneToMany(() => CarTranslation, (car_translation) => car_translation.car, {
+  @OneToOne(() => CarTranslation, (car_translation) => car_translation.car, {
     createForeignKeyConstraints: false,
   })
-  car_translations: CarTranslation[];
+  car_translation: CarTranslation[];
 
   @OneToMany(() => CarType, (car_type) => car_type.car, {
     createForeignKeyConstraints: false,

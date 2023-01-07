@@ -36,9 +36,13 @@ export class MasterTypeTranslation extends DateTimeEntity {
   })
   name: number;
 
-  @ManyToOne(() => MasterType, (master_type) => master_type.types, {
-    createForeignKeyConstraints: false,
-  })
+  @ManyToOne(
+    () => MasterType,
+    (master_type) => master_type.master_type_translation,
+    {
+      createForeignKeyConstraints: false,
+    },
+  )
   @JoinColumn({ name: 'type_id' })
   master_type: MasterType;
 

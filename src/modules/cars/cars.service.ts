@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Car } from './entities/car.entity';
-import { Repository } from 'typeorm';
-import { LIMIT_DEFAULT, OFFSET_DEFAULT } from 'src/constants/cars.constant';
+import { Brackets, Repository } from 'typeorm';
+import { handleGetLimitAndOffset } from 'src/helpers/panigation.helper';
 
 const CAR_SELECT_COL = [
   'cars.id',
@@ -43,7 +43,7 @@ export class CarsService {
       .createQueryBuilder('cars')
       .select(CAR_SELECT_COL)
       .leftJoin(
-        'cars.car_translations',
+        'cars.car_translation',
         'car_translations',
         'car_translations.code = :lang',
         { lang },
@@ -52,7 +52,7 @@ export class CarsService {
       .leftJoinAndSelect('cars.car_types', 'car_types')
       .leftJoinAndSelect('car_types.master_type', 'master_type')
       .leftJoinAndSelect(
-        'master_type.master_type_translations',
+        'master_type.master_type_translation',
         'master_type_translations',
         'master_type_translations.code = :lang',
         { lang },
@@ -74,33 +74,52 @@ export class CarsService {
     if (+max_price) {
       queryBuilder.andWhere('cars.price <= :max_price', { max_price });
     }
-    if (+pick_up_city_id) {
+    if (+pick_up_city_id && +drop_off_city_id) {
       queryBuilder
-        .andWhere('car_locations.name = :pick_up', { pick_up: 'pick_up' })
+        .andWhere(
+          new Brackets((qb) => {
+            qb.andWhere('car_locations.name = :name', {
+              name: 'pick_up',
+            }).andWhere('car_locations.city_id = :pick_up_city_id', {
+              pick_up_city_id: +pick_up_city_id,
+            });
+          }),
+        )
+        .orWhere(
+          new Brackets((qb) => {
+            qb.andWhere('car_locations.name = :name', {
+              name: 'drop_off',
+            }).andWhere('car_locations.city_id = :drop_off_city_id', {
+              drop_off_city_id: +drop_off_city_id,
+            });
+          }),
+        )
+        .groupBy('car_locations.car_id')
+        .having('count(car_locations.car_id) = 2');
+    } else if (+pick_up_city_id) {
+      queryBuilder
+        .andWhere('car_locations.name = :name', {
+          name: 'pick_up',
+        })
         .andWhere('car_locations.city_id = :pick_up_city_id', {
-          pick_up_city_id,
+          pick_up_city_id: +pick_up_city_id,
         });
-    }
-    if (+drop_off_city_id) {
+    } else if (+drop_off_city_id) {
       queryBuilder
-        .andWhere('car_locations.name = :drop_off', { drop_off: 'drop_off' })
+        .andWhere('car_locations.name = :name', {
+          name: 'drop_off',
+        })
         .andWhere('car_locations.city_id = :drop_off_city_id', {
-          drop_off_city_id,
+          drop_off_city_id: +drop_off_city_id,
         });
     }
 
-    const limitValue = +limit || LIMIT_DEFAULT;
-    const offsetValue = +offset || OFFSET_DEFAULT;
-    const data = await queryBuilder
-      .take(limitValue)
-      .skip(offsetValue)
-      .getMany();
+    const panigation = handleGetLimitAndOffset(limit, offset);
 
-    const panigation = {
-      limit: limitValue,
-      offset: offsetValue,
-      total: 20,
-    };
+    const data = await queryBuilder
+      .take(panigation.limit)
+      .skip(panigation.offset)
+      .getMany();
 
     return { data, panigation };
   }

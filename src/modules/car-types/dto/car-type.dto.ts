@@ -1,13 +1,12 @@
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose, Transform, Type } from 'class-transformer';
+import { MasterTypeTranslationDto } from 'src/modules/master-type-translations/dto/master-type-translation.dto';
 
 @Exclude()
 export class CarTypeDto {
   @Expose()
-  id: number;
+  readonly id: number;
 
   @Expose()
-  car_id: number;
-
-  @Expose()
-  type_id: number;
+  @Type(() => MasterTypeTranslationDto)
+  readonly master_type_translation: MasterTypeTranslationDto;
 }
