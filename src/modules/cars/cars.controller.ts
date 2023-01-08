@@ -1,9 +1,8 @@
 import { Controller, Get, Headers, Param, Query } from '@nestjs/common';
 import { CarsService } from './cars.service';
-import { TransformPlainToInstance } from 'class-transformer';
-import { CarsDto } from './dto/cars.dto';
 import { CarsRequestParamsDto } from './dto/cars-request-params.dto';
 import { ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { formatCarResponseHelper } from 'src/helpers/formart-car-response.helper';
 
 @Controller('cars')
 @ApiTags('api/v1/cars')
@@ -20,26 +19,23 @@ export class CarsController {
 
     return {
       items: data.map((item) => {
-        return {
-          id: item.id,
-          capacity: item.capacity,
-          gasoline: item.gasoline,
-          base_price: item.base_price,
-          price: item.price,
-          name: item.car_translation?.name,
-          steering: item.car_translation?.steering,
-          car_types: item.car_types.map((type) => ({
-            id: type.master_type?.master_type_translation?.id,
-            name: type.master_type?.master_type_translation?.name,
-          })),
-        };
+        return formatCarResponseHelper(item);
       }),
       panigation,
     };
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.carsService.findOne(+id);
+  @ApiHeader({ name: 'accept-language' })
+  async findOne(
+    @Param('id') id: string,
+    @Headers('accept-language') lang: string,
+  ) {
+    const item = await this.carsService.findOne(+id, lang);
+
+    return {
+      ...formatCarResponseHelper(item, ['description']),
+      car_images: item.car_images,
+    };
   }
 }
