@@ -1,5 +1,12 @@
 import { DateTimeEntity } from 'src/common/base-entity/date-time.entity';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Review } from 'src/modules/reviews/entities/review.entity';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity({ name: 'users' })
 export class User extends DateTimeEntity {
@@ -70,4 +77,9 @@ export class User extends DateTimeEntity {
     length: 50,
   })
   position: string;
+
+  @OneToMany(() => Review, (reviews) => reviews.user, {
+    createForeignKeyConstraints: false,
+  })
+  reviews: Review[];
 }
