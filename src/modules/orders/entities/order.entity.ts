@@ -1,5 +1,6 @@
 import { DateTimeEntity } from 'src/common/base-entity/date-time.entity';
 import { OrderDetail } from 'src/modules/order-details/entities/order-detail.entity';
+import { PaymentMethod } from 'src/modules/payment-methods/entities/payment-method.entity';
 import { User } from 'src/modules/users/entities/user.entity';
 import {
   Column,
@@ -114,4 +115,9 @@ export class Order extends DateTimeEntity {
   })
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @ManyToOne(() => PaymentMethod, (payment_method) => payment_method.orders, {
+    createForeignKeyConstraints: false,
+  })
+  payment_method: PaymentMethod;
 }
