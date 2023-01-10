@@ -1,6 +1,5 @@
 import { Controller, Post, Body, Res, UseGuards } from '@nestjs/common';
 import { OauthRefreshTokenService } from './oauth_refresh_token.service';
-import { Response } from 'express';
 import { OauthRequestDto } from './dto/oauth-request-params.dto';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -12,10 +11,7 @@ export class OauthRefreshTokenController {
   ) {}
 
   @Post()
-  async refreshToken(@Body() body: OauthRequestDto, @Res() res: Response) {
-    const newToken = await this.oauthRefreshTokenService.refreshToken(
-      body.refresh_token,
-    );
-    return res.status(200).json(newToken);
+  async refreshToken(@Body() body: OauthRequestDto) {
+    return await this.oauthRefreshTokenService.refreshToken(body.refresh_token);
   }
 }
