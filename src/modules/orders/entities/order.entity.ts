@@ -19,79 +19,79 @@ export class Order extends DateTimeEntity {
   id: number;
 
   @Column({
-    nullable: false,
+    nullable: true,
     type: 'int',
   })
   user_id: number;
 
   @Column({
-    nullable: false,
+    nullable: true,
     type: 'int',
   })
   payment_method_id: number;
 
   @Column({
-    nullable: false,
+    nullable: true,
     type: 'int',
   })
   promotion_id: number;
 
   @Column({
-    nullable: false,
+    nullable: true,
     type: 'varchar',
     length: 30,
   })
   bill_name: string;
 
   @Column({
-    nullable: false,
+    nullable: true,
     type: 'varchar',
     length: 30,
   })
   bill_phone_number: string;
 
   @Column({
-    nullable: false,
+    nullable: true,
     type: 'varchar',
     length: 30,
   })
   bill_address: string;
 
   @Column({
-    nullable: false,
+    nullable: true,
     type: 'varchar',
     length: 30,
   })
   bill_city: string;
 
   @Column({
-    nullable: false,
+    nullable: true,
     type: 'varchar',
     length: 50,
   })
   bill_promo_code: string;
 
   @Column({
-    nullable: false,
+    nullable: true,
     type: 'enum',
     enum: ['percent', 'absolute'],
   })
   bill_promo_type: string;
 
   @Column({
-    nullable: false,
+    nullable: true,
     type: 'datetime',
   })
   bill_promo_datetime_start: string;
 
   @Column({
-    nullable: false,
+    nullable: true,
     type: 'datetime',
   })
   bill_promo_datetime_end: string;
 
   @Column({
-    nullable: false,
+    nullable: true,
     type: 'decimal',
     precision: 10,
     scale: 2,
@@ -99,7 +99,7 @@ export class Order extends DateTimeEntity {
   total: number;
 
   @Column({
-    nullable: false,
+    nullable: true,
     type: 'enum',
     enum: ['open', 'inprogress', 'success', 'failed'],
   })
