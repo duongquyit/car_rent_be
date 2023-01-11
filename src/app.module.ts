@@ -5,8 +5,8 @@ import * as path from 'path';
 import { Module } from '@nestjs/common';
 import { UsersModule } from './modules/users/users.module';
 import { DataSourceOptions } from 'typeorm';
-
-console.log('app moduke');
+import { AuthModule } from './modules/auth/auth.module';
+import { OauthRefreshTokenModule } from './modules/oauth_refresh_token/oauth_refresh_token.module';
 
 @Module({
   imports: [
@@ -30,14 +30,19 @@ console.log('app moduke');
         };
       },
     }),
-    I18nModule.forRoot({
-      fallbackLanguage: 'en',
-      loaderOptions: {
-        path: path.join(__dirname, '../i18n/'),
-        watch: true,
-      },
+    I18nModule.forRootAsync({
+      useFactory: async () => ({
+        fallbackLanguage: 'en',
+        loaderOptions: {
+          path: path.join(__dirname, '../i18n/'),
+          watch: true,
+        },
+        typesOutputPath: path.join(__dirname, '../src/i18n/i18n.generated.ts'),
+      }),
     }),
     UsersModule,
+    AuthModule,
+    OauthRefreshTokenModule,
   ],
   controllers: [],
   providers: [],
