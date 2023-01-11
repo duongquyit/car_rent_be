@@ -21,3 +21,6 @@ export const SELECT_COL_DEFAULT = [
 export const SELECT_CAR_IMAGES_COL = ['car_images.path', 'car_images.id'];
 
 export const SELECT_CAR_DESCRIPTION_COL = ['car_translation.description'];
+
+export const CAR_IMAGE_THUMBNAIL_DEFAULT =
+  'https://w7.pngwing.com/pngs/414/106/png-transparent-enzo-ferrari-sports-car-luxury-vehicle-ferrari-compact-car-car-performance-car-thumbnail.png';
