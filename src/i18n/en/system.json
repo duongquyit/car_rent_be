@@ -1,0 +1,72 @@
+{
+  "CUS-0602": {
+    "code_id": "CUS-0602",
+    "app_code": "OBJECT_NOT_FOUND",
+    "title": "System error",
+    "prod": "An internal server error occurred.Please contact us if the problem is not solved. CUS-0602",
+    "inter": "I can't find a resource. CUS-0602"
+  },
+  "CFO-0001": {
+    "code_id": "CFO-0001",
+    "app_code": "INVALID_PARAMETER",
+    "title": "System error",
+    "prod": "There was a problem and the processing could not be proceeded.Please contact us if the problem is not solved. CFO-0001",
+    "inter": "Parameters are required. Please contact us if the problem is not solved. CFO-0001"
+  },
+  "CFO-0002": {
+    "code_id": "CFO-0002",
+    "app_code": "INVALID_PARAMETER",
+    "title": "System error",
+    "prod": "There was a problem and the processing could not be proceeded.Please contact us if the problem is not solved. CFO-0002",
+    "inter": "The parameter type is wrong. Please contact us if the problem is not solved. CFO-0002"
+  },
+  "CFO-0009": {
+    "code_id": "CFO-0009",
+    "app_code": "INVALID_PARAMETER",
+    "title": "Empty field",
+    "prod": "{field} is not empty. CFO-0009",
+    "inter": "{field} is not empty. CFO-0009"
+  },
+  "CFO-0011": {
+    "code_id": "CFO-0011",
+    "app_code": "INVALID_PARAMETER",
+    "title": "Value only number",
+    "prod": "{field} must be number. CFO-0011",
+    "inter": "{field} must be number. CFO-0011"
+  },
+  "CFO-0012": {
+    "code_id": "CFO-0012",
+    "app_code": "INVALID_PARAMETER",
+    "title": "Value only letters",
+    "prod": "{field} only contains letters. CFO-0012",
+    "inter": "{field} only contains letters. CFO-0012"
+  },
+  "CFO-0013": {
+    "code_id": "CFO-0013",
+    "app_code": "INVALID_PARAMETER",
+    "title": "min length is invalid",
+    "prod": "{field} must be must be longer than or equal to {min_len} characters. CFO-0013",
+    "inter": "{field} must be must be longer than or equal to {min_len} characters. CFO-0013"
+  },
+  "CFO-0014": {
+    "code_id": "CFO-0014",
+    "app_code": "INVALID_PARAMETER",
+    "title": "max length is invalid",
+    "prod": "{field} must be shorter than or equal to {max_len} characters CFO-0014",
+    "inter": "{field} must be shorter than or equal to {max_len} characters CFO-0014"
+  },
+  "FEC-0034": {
+    "code_id": "FEC-0034",
+    "app_code": "BAD_REQUEST",
+    "title": "You can order from a minimum of [min_qty] points",
+    "prod": "This product can be purchased from [min_qty] points FEC-0034",
+    "inter": "This product can be purchased from [min_qty] points FEC-0034"
+  },
+  "FEC-0035": {
+    "code_id": "FEC-0035",
+    "app_code": "BAD_REQUEST",
+    "title": "Products up to [max_qty] points",
+    "prod": "This product can be purchased up to [max_qty] points per order. FEC-0035",
+    "inter": "This product can be purchased up to [max_qty] points per order. FEC-0035"
+  }
+}
