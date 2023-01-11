@@ -14,5 +14,3 @@ export const dataSourceOptions: DataSourceOptions = {
   synchronize: false,
   logging: true,
 };
-
-export const dataSource = new DataSource(dataSourceOptions);

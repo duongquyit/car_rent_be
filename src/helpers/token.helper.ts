@@ -1,6 +1,6 @@
 import { TOKEN_TYPE } from 'src/constants/auth.constant';
-import { CreateOauthRefreshTokenDto } from 'src/modules/oauth_refresh_token/dto/create-oauth_refresh_token.dto';
 import { create_UUID } from './random-uuid.helper';
+import { CreateOauthRefreshTokenDto } from 'src/modules/oauth_refresh_token/dto/create-oauth_refresh_token.dto';
 
 export const signToken = async (payload: any, jwtService: any) => {
   const randomUUID = create_UUID();
