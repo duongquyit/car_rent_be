@@ -3,25 +3,25 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Car } from './entities/car.entity';
 import { Brackets, Repository } from 'typeorm';
 import { handleGetLimitAndOffset } from 'src/helpers/panigation.helper';
+import {
+  SELECT_CAR_DESCRIPTION_COL,
+  SELECT_CAR_IMAGES_COL,
+  SELECT_COL_DEFAULT,
+} from 'src/constants/cars.constant';
 
-const CAR_SELECT_COL = [
-  'cars.id',
-  'cars.capacity',
-  'cars.gasoline',
-  'cars.base_price',
-  'cars.price',
-];
+const carDefaultQueryBuilder = (carRepository: any) => {
+  const queryBuilder = carRepository
+    .createQueryBuilder('cars')
+    .leftJoin('cars.car_translation', 'car_translation')
+    .leftJoin('cars.car_types', 'car_types')
+    .leftJoin('car_types.master_type', 'master_type')
+    .leftJoin('master_type.master_type_translation', 'master_type_translation')
+    .leftJoin('cars.car_locations', 'car_locations')
+    .leftJoin('car_locations.city', 'city')
+    .select(SELECT_COL_DEFAULT);
 
-const CAR_TRANSLATIONS_SELECT_COL = [
-  'car_translations.id',
-  'car_translations.name',
-  'car_translations.steering',
-];
-
-const CAR_TYPES_SELECT_COL = [
-  'master_type_translations.name',
-  'master_type_translations.id',
-];
+  return queryBuilder;
+};
 
 @Injectable()
 export class CarsService {
@@ -39,29 +39,12 @@ export class CarsService {
       offset,
     } = query;
 
-    const queryBuilder = this.carRepository
-      .createQueryBuilder('cars')
-      .select(CAR_SELECT_COL)
-      .leftJoin(
-        'cars.car_translation',
-        'car_translations',
-        'car_translations.code = :lang',
-        { lang },
-      )
-      .addSelect(CAR_TRANSLATIONS_SELECT_COL)
-      .leftJoinAndSelect('cars.car_types', 'car_types')
-      .leftJoinAndSelect('car_types.master_type', 'master_type')
-      .leftJoinAndSelect(
-        'master_type.master_type_translation',
-        'master_type_translations',
-        'master_type_translations.code = :lang',
-        { lang },
-      )
-      .leftJoinAndSelect('cars.car_locations', 'car_locations')
-      .leftJoinAndSelect('car_locations.city', 'city');
+    const queryBuilder = carDefaultQueryBuilder(this.carRepository);
+    queryBuilder.andWhere('car_translation.code = :lang', { lang });
+    queryBuilder.andWhere('master_type_translation.code = :lang', { lang });
 
     if (name?.trim()) {
-      queryBuilder.andWhere('car_translations.name like :name', {
+      queryBuilder.andWhere('car_translation.name like :name', {
         name: `%${query.name}%`,
       });
     }
@@ -78,8 +61,8 @@ export class CarsService {
       queryBuilder
         .andWhere(
           new Brackets((qb) => {
-            qb.andWhere('car_locations.name = :name', {
-              name: 'pick_up',
+            qb.andWhere('car_locations.name = :pick_up', {
+              pick_up: 'pick_up',
             }).andWhere('car_locations.city_id = :pick_up_city_id', {
               pick_up_city_id: +pick_up_city_id,
             });
@@ -87,8 +70,8 @@ export class CarsService {
         )
         .orWhere(
           new Brackets((qb) => {
-            qb.andWhere('car_locations.name = :name', {
-              name: 'drop_off',
+            qb.andWhere('car_locations.name = :drop_off', {
+              drop_off: 'drop_off',
             }).andWhere('car_locations.city_id = :drop_off_city_id', {
               drop_off_city_id: +drop_off_city_id,
             });
@@ -125,10 +108,20 @@ export class CarsService {
       .skip(panigation.offset)
       .getMany();
 
+    console.log(data);
+
     return { data, panigation };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} car`;
+  async findOne(id: number, lang: string) {
+    const queryBuilder = carDefaultQueryBuilder(this.carRepository);
+    queryBuilder
+      .leftJoin('cars.car_images', 'car_images')
+      .addSelect([...SELECT_CAR_IMAGES_COL, ...SELECT_CAR_DESCRIPTION_COL])
+      .andWhere('cars.id = :id', { id })
+      .andWhere('car_translation.code = :lang', { lang })
+      .andWhere('master_type_translation.code = :lang', { lang });
+
+    return await queryBuilder.getOne();
   }
 }
