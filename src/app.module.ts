@@ -19,6 +19,7 @@ import { CarImagesModule } from './modules/car-images/car-images.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ResponseSerializeInterceptor } from './common/interceptors/response-serialize.interceptor';
 import { ReviewsModule } from './modules/reviews/reviews.module';
+import { PaymentMethodsModule } from './modules/payment-methods/payment-methods.module';
 
 @Module({
   imports: [
@@ -65,6 +66,7 @@ import { ReviewsModule } from './modules/reviews/reviews.module';
     CarLocationsModule,
     CarImagesModule,
     ReviewsModule,
+    PaymentMethodsModule,
   ],
   controllers: [],
   providers: [
