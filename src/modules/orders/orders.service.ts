@@ -15,6 +15,7 @@ import {
   SUCCESS_STATUS,
 } from 'src/constants/order.constant';
 import PayoutFactory from '../payment-methods/payment-method-factory/payout-factory';
+import IPayOut from '../payment-methods/payment-method-factory/interfaces/payout.interface';
 
 @Injectable()
 export class OrdersService {
@@ -27,42 +28,42 @@ export class OrdersService {
     private paymentMethodRepository: Repository<PaymentMethod>,
   ) {}
 
-  async create(createOrderDto: CreateOrderDto, user: any) {
+  async create(createOrderDto: CreateOrderDto, user: any): Promise<Order> {
     const { billing_info, payment_method, rental_info, car_id } =
       createOrderDto;
 
-    const { user_id } = user;
+    const user_id: number = user.user_id;
 
-    const car = await this.validateCarExists(+car_id);
+    const car: Car = await this.validateCarExists(+car_id);
 
     await this.checkCarAvaiable(+car_id, rental_info);
 
-    const subTotal = this.getSubtotal(
+    const subTotal: number = this.getSubtotal(
       rental_info.pick_up_datetime,
       rental_info.drop_off_datetime,
       DEFAULT_QUANTITY,
       car.price,
     );
 
-    const newOrder = await this.orderRepository.save({
+    const newOrder: Order = await this.orderRepository.save({
       user_id,
       payment_method_id: payment_method.id,
       ...billing_info,
       status: OPEN_STATUS,
     });
 
-    await this.orderDetailRepository.save({
+    const orderDetails = await this.orderDetailRepository.save({
       ...rental_info,
       car_id: car.id,
-      sub_total: subTotal,
+      sub_totals: subTotal,
       order_id: newOrder.id,
     });
 
-    const payOut = await this.genetatePayout(payment_method);
+    const payOut: IPayOut = await this.genetatePayout(payment_method);
     payOut.setAmount(subTotal);
-    let payoutStatus = payOut.pay() ? SUCCESS_STATUS : FAILED_STATUS;
+    const payoutStatus: string = payOut.pay() ? SUCCESS_STATUS : FAILED_STATUS;
 
-    const orderResult = await this.orderRepository.save({
+    const orderResult: Order = await this.orderRepository.save({
       ...newOrder,
       status: payoutStatus,
       total: subTotal,
@@ -72,13 +73,15 @@ export class OrdersService {
       // create new transation.
     }
 
-    return orderResult;
+    return { ...orderResult, ...orderDetails, id: newOrder.id };
   }
 
   async validateCarExists(carId: number): Promise<Car> {
-    const car = await this.carRepository.findOne({ where: { id: +carId } });
+    const car: Car = await this.carRepository.findOne({
+      where: { id: +carId },
+    });
     if (!car) {
-      throw new BadRequestException('message');
+      throw new BadRequestException('app.FEC-0045');
     }
 
     return car;
@@ -99,40 +102,48 @@ export class OrdersService {
               pick_up_datetime,
               drop_off_datetime,
             },
+          ).orWhere(
+            'order_details.pick_up_datetime between :pick_up_datetime and :drop_off_datetime',
+            {
+              pick_up_datetime,
+              drop_off_datetime,
+            },
           );
         }),
       );
-    const carsAmount = await queryBuilder.getCount();
+    const carsAmount: number = await queryBuilder.getCount();
+
     if (carsAmount) {
-      throw new BadRequestException('Car is not available');
+      throw new BadRequestException('app.FEC-0044');
     }
 
     return true;
   }
 
-  checkDateTimeValid(pick_up_datetime: string, drop_off_datetime: string) {
+  checkDateTimeValid(
+    pick_up_datetime: string,
+    drop_off_datetime: string,
+  ): void {
     const start = new Date(pick_up_datetime);
     const end = new Date(drop_off_datetime);
 
     if (start < new Date() || end < new Date()) {
-      console.log('Start or End day can not less now');
-      throw new BadRequestException('Car is not available');
+      throw new BadRequestException('app.FEC-0042');
     }
     if (start > end) {
-      console.log('Start day can not be less than end day');
-      throw new BadRequestException('Start day can not be less than end day');
+      throw new BadRequestException('app.FEC-0043');
     }
   }
 
-  async genetatePayout(paymentMethodDto: PaymentMethodDto) {
-    const method = await this.paymentMethodRepository.findOne({
+  async genetatePayout(paymentMethodDto: PaymentMethodDto): Promise<IPayOut> {
+    const method: PaymentMethod = await this.paymentMethodRepository.findOne({
       where: { id: paymentMethodDto.id },
     });
 
     if (!method) {
-      throw new Error('message');
+      throw new BadRequestException('order.FEC-0041');
     }
-    const payOut = PayoutFactory.generatePayout(method.name);
+    const payOut: IPayOut = PayoutFactory.generatePayout(method.name);
 
     return payOut;
   }
@@ -142,10 +153,10 @@ export class OrdersService {
     drop_off_datetime: string,
     quantity: number,
     price: number,
-  ) {
-    const start: any = new Date(pick_up_datetime);
-    const end: any = new Date(drop_off_datetime);
-    const days = Math.ceil((end - start) / A_DAY_IN_MILLISECONDS);
+  ): number {
+    const start: number = new Date(pick_up_datetime).getMilliseconds();
+    const end: number = new Date(drop_off_datetime).getMilliseconds();
+    const days: number = Math.ceil((end - start) / A_DAY_IN_MILLISECONDS);
 
     return days * price * quantity;
   }
