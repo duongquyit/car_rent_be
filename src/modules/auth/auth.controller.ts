@@ -12,8 +12,10 @@ import { AuthService } from './auth.service';
 import { Response } from 'express';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { AUTHORIZATION } from 'src/constants/auth.constant';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
+@ApiTags('api/v1/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
