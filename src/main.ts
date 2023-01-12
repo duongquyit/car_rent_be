@@ -12,6 +12,7 @@ async function bootstrap() {
   app.useGlobalPipes(
     new I18nValidationPipe({
       whitelist: true,
+      forbidUnknownValues: false,
     }),
   );
   const config = new DocumentBuilder()
