@@ -3,6 +3,7 @@ import { CarImage } from 'src/modules/car-images/entities/car-image.entity';
 import { CarLocation } from 'src/modules/car-locations/entities/car-location.entity';
 import { CarTranslation } from 'src/modules/car-translations/entities/car-translation.entity';
 import { CarType } from 'src/modules/car-types/entities/car-type.entity';
+import { Review } from 'src/modules/reviews/entities/review.entity';
 import {
   Column,
   Entity,
@@ -64,4 +65,9 @@ export class Car extends DateTimeEntity {
     createForeignKeyConstraints: false,
   })
   car_images: CarImage[];
+
+  @OneToMany(() => Review, (review) => review.car, {
+    createForeignKeyConstraints: false,
+  })
+  reviews: Review[];
 }

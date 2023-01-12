@@ -11,8 +11,8 @@ export const handleGetLimitAndOffset = (
   offsetValue: number,
   totalValue: number = 0,
 ): PanigationType => {
-  const limit: number = limitValue || LIMIT_DEFAULT;
-  const offset: number = offsetValue || OFFSET_DEFAULT;
+  const limit: number = limitValue;
+  const offset: number = offsetValue;
   const total: number = totalValue;
   return { limit, offset, total };
 };

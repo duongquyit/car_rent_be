@@ -18,6 +18,7 @@ import { CarLocationsModule } from './modules/car-locations/car-locations.module
 import { CarImagesModule } from './modules/car-images/car-images.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ResponseSerializeInterceptor } from './common/interceptors/response-serialize.interceptor';
+import { ReviewsModule } from './modules/reviews/reviews.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { ResponseSerializeInterceptor } from './common/interceptors/response-ser
     MasterTypeTranslationsModule,
     CarLocationsModule,
     CarImagesModule,
+    ReviewsModule,
   ],
   controllers: [],
   providers: [
