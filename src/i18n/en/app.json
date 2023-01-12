@@ -1,0 +1,16 @@
+{
+  "FEC-009": {
+    "code_id": "FEC-009",
+    "app_code": "BAD_REQUEST",
+    "title": "System error",
+    "prod": "App is unauthenticated. FEC-009",
+    "inter": "App is unauthenticated. FEC-009"
+  },
+  "FEC-0011": {
+    "code_id": "FEC-0011",
+    "app_code": "BAD_REQUEST",
+    "title": "Order not completed",
+    "prod": "The order could not be completed because there was no operation for a long time. Please order again. FEC-0011",
+    "inter": "The order could not be completed because there was no operation for a long time. Please order again. FEC-0011"
+  }
+}
