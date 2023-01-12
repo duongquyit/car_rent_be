@@ -5,9 +5,9 @@ import { Repository } from 'typeorm';
 import { User } from 'src/modules/users/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
-import { OauthRefreshToken } from 'src/modules/oauth_refresh_token/entities/oauth_refresh_token.entity';
-import { CreateOauthRefreshTokenDto } from '../oauth_refresh_token/dto/create-oauth_refresh_token.dto';
 import { signToken } from 'src/helpers/token.helper';
+import { OauthRefreshToken } from '../oauth_refresh_token/entities/oauth_refresh_token.entity';
+import { CreateOauthRefreshTokenDto } from '../oauth_refresh_token/dto/create-oauth_refresh_token.dto';
 
 @Injectable()
 export class AuthService {
