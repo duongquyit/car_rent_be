@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { decodePassword } from 'src/helpers/bcrypt-hash.helper';
 import { Repository } from 'typeorm';
@@ -43,8 +47,7 @@ export class AuthService {
     return { user_id: user.id };
   }
 
-  async signin(createAuthDto: CreateAuthDto) {
-    const payload = await this.validateUser(createAuthDto);
+  async signin(payload: any) {
     const { createRTDto, responseToken } = await signToken(
       payload,
       this.jwtService,
@@ -58,16 +61,18 @@ export class AuthService {
     return await this.oauthRefreshTokenRepository.save(createRTDto);
   }
 
-  async logout(authorization: string) {
-    const token = authorization.split(' ')[1];
-    const { user_id } = await this.jwtService.verifyAsync(token, {
-      secret: process.env.AT_SECRET_KEY,
-    });
+  async logout(payload: any) {
+    const { user_id, refresh_token_id } = payload;
+
     const refreshToken = await this.oauthRefreshTokenRepository.findOne({
-      where: { user_id, deleted_at: null },
+      where: { user_id, deleted_at: null, refresh_token: refresh_token_id },
     });
 
+    if (!refreshToken) {
+      throw new UnauthorizedException('user.CUS-0405');
+    }
     await this.oauthRefreshTokenRepository.softRemove(refreshToken);
+
     return;
   }
 }

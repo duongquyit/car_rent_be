@@ -5,11 +5,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/modules/users/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
+import { LocalStrategy } from './local.strategy';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { OauthRefreshToken } from '../oauth_refresh_token/entities/oauth_refresh_token.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, OauthRefreshToken])],
   controllers: [AuthController],
-  providers: [AuthService, JwtService, JwtStrategy],
+  providers: [
+    AuthService,
+    JwtService,
+    JwtStrategy,
+    LocalStrategy,
+    JwtAuthGuard,
+  ],
 })
 export class AuthModule {}

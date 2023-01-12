@@ -4,18 +4,16 @@ import { CreateOauthRefreshTokenDto } from 'src/modules/oauth_refresh_token/dto/
 
 export const signToken = async (payload: any, jwtService: any) => {
   const randomUUID = create_UUID();
+  const newPayload = { ...payload, refresh_token_id: randomUUID };
   const [accessToken, refreshToken] = await Promise.all([
-    jwtService.signAsync(payload, {
+    jwtService.signAsync(newPayload, {
       secret: process.env.AT_SECRET_KEY,
-      expiresIn: process.env.AT_EXPIRES_TIME,
+      expiresIn: +process.env.AT_EXPIRES_TIME,
     }),
-    jwtService.signAsync(
-      { refresh_token_id: randomUUID, user_id: payload.user_id },
-      {
-        secret: process.env.RT_SECRET_KEY,
-        expiresIn: process.env.RT_EXPIRES_TIME,
-      },
-    ),
+    jwtService.signAsync(newPayload, {
+      secret: process.env.RT_SECRET_KEY,
+      expiresIn: process.env.RT_EXPIRES_TIME,
+    }),
   ]);
 
   const createRTDto: CreateOauthRefreshTokenDto = {
