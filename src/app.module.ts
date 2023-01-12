@@ -6,7 +6,16 @@ import { Module } from '@nestjs/common';
 import { UsersModule } from './modules/users/users.module';
 import { DataSourceOptions } from 'typeorm';
 import { AuthModule } from './modules/auth/auth.module';
-import { OauthRefreshTokenModule } from './modules/oauth_refresh_token/oauth_refresh_token.module';
+import { OauthRefreshTokenModule } from './modules/oauth-refresh-token/oauth-refresh-token.module';
+import { MasterCitiesModule } from './modules/master-cities/master-cities.module';
+import { MasterTypesModule } from './modules/master-types/master-types.module';
+import { CarsModule } from './modules/cars/cars.module';
+import { MasterLanguagesModule } from './modules/master-languages/master-languages.module';
+import { CarTranslationsModule } from './modules/car-translations/car-translations.module';
+import { CarTypesModule } from './modules/car-types/car-types.module';
+import { MasterTypeTranslationsModule } from './modules/master-type-translations/master-type-translations.module';
+import { CarLocationsModule } from './modules/car-locations/car-locations.module';
+import { CarImagesModule } from './modules/car-images/car-images.module';
 
 @Module({
   imports: [
@@ -43,6 +52,15 @@ import { OauthRefreshTokenModule } from './modules/oauth_refresh_token/oauth_ref
     UsersModule,
     AuthModule,
     OauthRefreshTokenModule,
+    MasterCitiesModule,
+    MasterTypesModule,
+    CarsModule,
+    MasterLanguagesModule,
+    CarTranslationsModule,
+    CarTypesModule,
+    MasterTypeTranslationsModule,
+    CarLocationsModule,
+    CarImagesModule,
   ],
   controllers: [],
   providers: [],
