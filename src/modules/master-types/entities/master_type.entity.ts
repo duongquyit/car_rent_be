@@ -1,7 +1,7 @@
 import { DateTimeEntity } from 'src/common/base-entity/date-time.entity';
 import { CarType } from 'src/modules/car-types/entities/car-type.entity';
 import { MasterTypeTranslation } from 'src/modules/master-type-translations/entities/master-type-translation.entity';
-import { Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({
   name: 'master_types',
@@ -15,12 +15,12 @@ export class MasterType extends DateTimeEntity {
   })
   types: CarType[];
 
-  @OneToMany(
+  @OneToOne(
     () => MasterTypeTranslation,
     (master_type_tran) => master_type_tran.master_type,
     {
       createForeignKeyConstraints: false,
     },
   )
-  master_type_translations: MasterTypeTranslation[];
+  master_type_translation: MasterTypeTranslation[];
 }

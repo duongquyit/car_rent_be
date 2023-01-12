@@ -51,7 +51,7 @@ export class CarTranslation extends DateTimeEntity {
   })
   steering: string;
 
-  @ManyToOne(() => Car, (car) => car.car_translations, {
+  @ManyToOne(() => Car, (car) => car.car_translation, {
     createForeignKeyConstraints: false,
   })
   @JoinColumn({ name: 'car_id' })

@@ -21,7 +21,7 @@ export class CarDto {
 
   @Expose()
   @Type(() => CarTranslationDto)
-  car_translations: CarTranslationDto;
+  car_translation: CarTranslationDto;
 
   @Expose()
   @Type(() => CarTypesDto)
