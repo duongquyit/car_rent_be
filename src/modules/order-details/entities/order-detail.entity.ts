@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 
 @Entity({
-  name: 'order-details',
+  name: 'order_details',
 })
 export class OrderDetail extends DateTimeEntity {
   @PrimaryGeneratedColumn()
