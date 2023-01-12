@@ -114,7 +114,11 @@ export class CarsService {
         });
     }
 
-    const panigation = handleGetLimitAndOffset(limit, offset);
+    const panigation = handleGetLimitAndOffset(
+      limit,
+      offset,
+      await queryBuilder.getCount(),
+    );
 
     const data = await queryBuilder
       .take(panigation.limit)

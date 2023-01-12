@@ -53,7 +53,7 @@ export class Car extends DateTimeEntity {
   @OneToOne(() => CarTranslation, (car_translation) => car_translation.car, {
     createForeignKeyConstraints: false,
   })
-  car_translation: CarTranslation[];
+  car_translation: CarTranslation;
 
   @OneToMany(() => CarType, (car_type) => car_type.car, {
     createForeignKeyConstraints: false,

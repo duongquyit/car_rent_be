@@ -22,5 +22,5 @@ export class MasterType extends DateTimeEntity {
       createForeignKeyConstraints: false,
     },
   )
-  master_type_translation: MasterTypeTranslation[];
+  master_type_translation: MasterTypeTranslation;
 }
