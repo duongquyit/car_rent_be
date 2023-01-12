@@ -12,7 +12,7 @@ export class CarsRequestParamsDto {
   drop_off_city_id: number;
 
   @ApiProperty({ required: false })
-  drop_off_at: string;
+  drop_off_datetime: string;
 
   @ApiProperty({ required: false })
   name: string;
@@ -21,7 +21,7 @@ export class CarsRequestParamsDto {
   type_id: number[];
 
   @ApiProperty({ required: false })
-  capacity: number;
+  capacity: number[];
 
   @ApiProperty({ required: false })
   max_price: number;

@@ -1,8 +1,9 @@
-import { Controller, Get, Headers, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { CarsService } from './cars.service';
 import { CarsRequestParamsDto } from './dto/cars-request-params.dto';
-import { ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { formatCarResponseHelper } from 'src/helpers/formart-car-response.helper';
+import { I18n, I18nContext } from 'nestjs-i18n';
 
 @Controller('cars')
 @ApiTags('api/v1/cars')
@@ -10,12 +11,14 @@ export class CarsController {
   constructor(private readonly carsService: CarsService) {}
 
   @Get()
-  @ApiQuery({ type: CarsRequestParamsDto })
-  @ApiHeader({
-    name: 'accept-language',
-  })
-  async findAll(@Query() query, @Headers('accept-language') lang: string) {
-    const { data, panigation } = await this.carsService.findAll(query, lang);
+  async findAll(
+    @Query() query: CarsRequestParamsDto,
+    @I18n() i18n: I18nContext,
+  ) {
+    const { data, panigation } = await this.carsService.findAll(
+      query,
+      i18n.lang,
+    );
 
     return {
       items: data.map((item) => {
@@ -26,12 +29,8 @@ export class CarsController {
   }
 
   @Get(':id')
-  @ApiHeader({ name: 'accept-language' })
-  async findOne(
-    @Param('id') id: string,
-    @Headers('accept-language') lang: string,
-  ) {
-    const item = await this.carsService.findOne(+id, lang);
+  async findOne(@Param('id') id: string, @I18n() i18n: I18nContext) {
+    const item = await this.carsService.findOne(+id, i18n.lang);
 
     return {
       ...formatCarResponseHelper(item, ['description']),
