@@ -4,6 +4,8 @@ import { Car } from './entities/car.entity';
 import { Brackets, Repository } from 'typeorm';
 import { handleGetLimitAndOffset } from 'src/helpers/panigation.helper';
 import {
+  LIMIT_DEFAULT,
+  OFFSET_DEFAULT,
   SELECT_CAR_DESCRIPTION_COL,
   SELECT_CAR_IMAGES_COL,
   SELECT_COL_DEFAULT,
@@ -98,8 +100,8 @@ export class CarsService {
     }
 
     const panigation = handleGetLimitAndOffset(
-      limit,
-      offset,
+      limit || LIMIT_DEFAULT,
+      offset || OFFSET_DEFAULT,
       await queryBuilder.getCount(),
     );
 
@@ -107,8 +109,6 @@ export class CarsService {
       .take(panigation.limit)
       .skip(panigation.offset)
       .getMany();
-
-    console.log(data);
 
     return { data, panigation };
   }
