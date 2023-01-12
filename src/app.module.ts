@@ -6,7 +6,7 @@ import { Module } from '@nestjs/common';
 import { UsersModule } from './modules/users/users.module';
 import { DataSourceOptions } from 'typeorm';
 import { AuthModule } from './modules/auth/auth.module';
-import { OauthRefreshTokenModule } from './modules/oauth-refresh-token/oauth-refresh-token.module';
+import { OauthRefreshTokenModule } from './modules/oauth_refresh_token/oauth_refresh_token.module';
 import { MasterCitiesModule } from './modules/master-cities/master-cities.module';
 import { MasterTypesModule } from './modules/master-types/master-types.module';
 import { CarsModule } from './modules/cars/cars.module';
@@ -16,6 +16,8 @@ import { CarTypesModule } from './modules/car-types/car-types.module';
 import { MasterTypeTranslationsModule } from './modules/master-type-translations/master-type-translations.module';
 import { CarLocationsModule } from './modules/car-locations/car-locations.module';
 import { CarImagesModule } from './modules/car-images/car-images.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ResponseSerializeInterceptor } from './common/interceptors/response-serialize.interceptor';
 
 @Module({
   imports: [
@@ -63,6 +65,11 @@ import { CarImagesModule } from './modules/car-images/car-images.module';
     CarImagesModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseSerializeInterceptor,
+    },
+  ],
 })
 export class AppModule {}
