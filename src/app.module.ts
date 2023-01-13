@@ -22,6 +22,7 @@ import { ReviewsModule } from './modules/reviews/reviews.module';
 import { PaymentMethodsModule } from './modules/payment-methods/payment-methods.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { OrderDetailsModule } from './modules/order-details/order-details.module';
+import { CarFavoritesModule } from './modules/car-favorites/car-favorites.module';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { OrderDetailsModule } from './modules/order-details/order-details.module
     PaymentMethodsModule,
     OrdersModule,
     OrderDetailsModule,
+    CarFavoritesModule,
   ],
   controllers: [],
   providers: [
