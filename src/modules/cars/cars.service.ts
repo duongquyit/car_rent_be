@@ -1,36 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Car } from './entities/car.entity';
-import { Brackets, Repository } from 'typeorm';
-import { handleGetLimitAndOffset } from 'src/helpers/panigation.helper';
 import {
-  LIMIT_DEFAULT,
-  OFFSET_DEFAULT,
+  Car,
   SELECT_CAR_DESCRIPTION_COL,
+  SELECT_CAR_FAVORITES_COL,
   SELECT_CAR_IMAGES_COL,
   SELECT_COL_DEFAULT,
-} from 'src/constants/cars.constant';
+} from './entities/car.entity';
+import { Brackets, Repository } from 'typeorm';
+import { handleGetLimitAndOffset } from 'src/helpers/panigation.helper';
+import { LIMIT_DEFAULT, OFFSET_DEFAULT } from 'src/constants/cars.constant';
 import { PICK_UP, DROP_OFF } from 'src/constants/car-locations';
-
-const carDefaultQueryBuilder = (carRepository: Repository<Car>) => {
-  const queryBuilder = carRepository
-    .createQueryBuilder('cars')
-    .leftJoin('cars.car_translation', 'car_translation')
-    .leftJoin('cars.car_types', 'car_types')
-    .leftJoin('car_types.master_type', 'master_type')
-    .leftJoin('master_type.master_type_translation', 'master_type_translation')
-    .leftJoin('cars.car_locations', 'car_locations')
-    .leftJoin('car_locations.city', 'city')
-    .select(SELECT_COL_DEFAULT);
-
-  return queryBuilder;
-};
 
 @Injectable()
 export class CarsService {
   constructor(@InjectRepository(Car) private carRepository: Repository<Car>) {}
 
-  async findAll(query: any, lang: string) {
+  async findAll(query: any, lang: string, user: any) {
     const {
       name,
       type_id,
@@ -44,10 +30,16 @@ export class CarsService {
       offset,
     } = query;
 
-    const queryBuilder = carDefaultQueryBuilder(this.carRepository);
+    const userId: number = user.user_id;
+
+    const queryBuilder = this.carDefaultQueryBuilder(this.carRepository);
     queryBuilder
-      .leftJoinAndSelect('cars.order_details', 'order_details')
-      .leftJoinAndSelect('order_details.order', 'order')
+      .leftJoin('cars.order_details', 'order_details')
+      .leftJoin('order_details.order', 'order')
+      .leftJoin('cars.favorites', 'favorites', 'favorites.user_id = :user_id', {
+        user_id: userId,
+      })
+      .addSelect(SELECT_CAR_FAVORITES_COL)
       .andWhere('car_translation.code = :lang', { lang })
       .andWhere('master_type_translation.code = :lang', { lang });
 
@@ -162,15 +154,40 @@ export class CarsService {
     return { data, panigation };
   }
 
-  async findOne(id: number, lang: string) {
-    const queryBuilder = carDefaultQueryBuilder(this.carRepository);
+  async findOne(id: number, lang: string, user: any) {
+    const userId = user.user_id;
+    const queryBuilder = this.carDefaultQueryBuilder(this.carRepository);
     queryBuilder
       .leftJoin('cars.car_images', 'car_images')
-      .addSelect([...SELECT_CAR_IMAGES_COL, ...SELECT_CAR_DESCRIPTION_COL])
+      .leftJoin('cars.favorites', 'favorites', 'favorites.user_id = :user_id', {
+        user_id: userId,
+      })
+      .addSelect([
+        ...SELECT_CAR_IMAGES_COL,
+        ...SELECT_CAR_DESCRIPTION_COL,
+        ...SELECT_CAR_FAVORITES_COL,
+      ])
       .andWhere('cars.id = :id', { id })
       .andWhere('car_translation.code = :lang', { lang })
       .andWhere('master_type_translation.code = :lang', { lang });
 
     return await queryBuilder.getOne();
   }
+
+  carDefaultQueryBuilder = (carRepository: Repository<Car>) => {
+    const queryBuilder = carRepository
+      .createQueryBuilder('cars')
+      .leftJoin('cars.car_translation', 'car_translation')
+      .leftJoin('cars.car_types', 'car_types')
+      .leftJoin('car_types.master_type', 'master_type')
+      .leftJoin(
+        'master_type.master_type_translation',
+        'master_type_translation',
+      )
+      .leftJoin('cars.car_locations', 'car_locations')
+      .leftJoin('car_locations.city', 'city')
+      .select(SELECT_COL_DEFAULT);
+
+    return queryBuilder;
+  };
 }
