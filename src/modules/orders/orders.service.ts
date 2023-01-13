@@ -4,7 +4,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Brackets, Repository } from 'typeorm';
 import { Car } from '../cars/entities/car.entity';
 import { Order } from './entities/order.entity';
-import { OrderDetail } from '../order-details/entities/order-detail.entity';
+import {
+  ORDER_DETAIL_SELECT_COLS,
+  OrderDetail,
+} from '../order-details/entities/order-detail.entity';
 import { PaymentMethodDto } from './dto/payment-method-info.dto';
 import { PaymentMethod } from '../payment-methods/entities/payment-method.entity';
 import {
@@ -13,7 +16,6 @@ import {
   A_DAY_IN_MILLISECONDS,
   OPEN_STATUS,
   SUCCESS_STATUS,
-  ORDER_DETAIL_SELECT_COLS,
 } from 'src/constants/order.constant';
 import PayoutFactory from '../payment-methods/payment-method-factory/payout-factory';
 import IPayOut from '../payment-methods/payment-method-factory/interfaces/payout.interface';

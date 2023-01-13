@@ -1,4 +1,5 @@
 import { DateTimeEntity } from 'src/common/base-entity/date-time.entity';
+import { CarFavorite } from 'src/modules/car-favorites/entities/car-favorite.entity';
 import { CarImage } from 'src/modules/car-images/entities/car-image.entity';
 import { CarLocation } from 'src/modules/car-locations/entities/car-location.entity';
 import { CarTranslation } from 'src/modules/car-translations/entities/car-translation.entity';
@@ -76,4 +77,9 @@ export class Car extends DateTimeEntity {
     createForeignKeyConstraints: false,
   })
   order_details: OrderDetail[];
+
+  @OneToMany(() => CarFavorite, (car_favorite) => car_favorite.car, {
+    createForeignKeyConstraints: false,
+  })
+  favorites: CarFavorite[];
 }

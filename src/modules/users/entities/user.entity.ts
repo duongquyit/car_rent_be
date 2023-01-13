@@ -1,4 +1,5 @@
 import { DateTimeEntity } from 'src/common/base-entity/date-time.entity';
+import { CarFavorite } from 'src/modules/car-favorites/entities/car-favorite.entity';
 import { Order } from 'src/modules/orders/entities/order.entity';
 import { Review } from 'src/modules/reviews/entities/review.entity';
 import {
@@ -88,4 +89,9 @@ export class User extends DateTimeEntity {
     createForeignKeyConstraints: false,
   })
   orders: Order[];
+
+  @OneToMany(() => CarFavorite, (car_favorite) => car_favorite.user, {
+    createForeignKeyConstraints: false,
+  })
+  car_favorites: CarFavorite[];
 }
