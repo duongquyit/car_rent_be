@@ -14,7 +14,7 @@ export const formatCarResponseHelper = (car: any, fields: string[] = []) => {
     image_thumbnail: car.image_thumbnail || CAR_IMAGE_THUMBNAIL_DEFAULT,
     steering: car.car_translation?.steering,
     car_types: car.car_types.map((type: any) => ({
-      id: type.master_type?.master_type_translation?.id,
+      id: type.master_type?.id,
       name: type.master_type?.master_type_translation?.name,
     })),
   };

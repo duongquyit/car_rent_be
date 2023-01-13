@@ -10,8 +10,9 @@ import {
   SELECT_CAR_IMAGES_COL,
   SELECT_COL_DEFAULT,
 } from 'src/constants/cars.constant';
+import { PICK_UP, DROP_OFF } from 'src/constants/car-locations';
 
-const carDefaultQueryBuilder = (carRepository: any) => {
+const carDefaultQueryBuilder = (carRepository: Repository<Car>) => {
   const queryBuilder = carRepository
     .createQueryBuilder('cars')
     .leftJoin('cars.car_translation', 'car_translation')
@@ -33,28 +34,52 @@ export class CarsService {
     const {
       name,
       type_id,
-      car_capacity,
+      capacity,
       max_price,
       pick_up_city_id,
       drop_off_city_id,
+      pick_up_datetime,
+      drop_off_datetime,
       limit,
       offset,
     } = query;
 
     const queryBuilder = carDefaultQueryBuilder(this.carRepository);
-    queryBuilder.andWhere('car_translation.code = :lang', { lang });
-    queryBuilder.andWhere('master_type_translation.code = :lang', { lang });
+    queryBuilder
+      .leftJoinAndSelect('cars.order_details', 'order_details')
+      .leftJoinAndSelect('order_details.order', 'order')
+      .andWhere('car_translation.code = :lang', { lang })
+      .andWhere('master_type_translation.code = :lang', { lang });
 
     if (name?.trim()) {
       queryBuilder.andWhere('car_translation.name like :name', {
         name: `%${query.name}%`,
       });
     }
-    if (+type_id) {
-      queryBuilder.andWhere('car_types.type_id = :type_id', { type_id });
+    if (type_id) {
+      const carTypes = Array.isArray(type_id) ? type_id : [type_id];
+      queryBuilder.andWhere(
+        new Brackets((qb) => {
+          carTypes.forEach((id, index) => {
+            qb.orWhere(`master_type.id = :id${index}`, {
+              [`id${index}`]: id,
+            });
+          });
+        }),
+      );
     }
-    if (+car_capacity) {
-      queryBuilder.andWhere('cars.capacity = :car_capacity', { car_capacity });
+
+    if (capacity) {
+      const carCapacities = Array.isArray(capacity) ? capacity : [capacity];
+      queryBuilder.andWhere(
+        new Brackets((qb) => {
+          carCapacities.forEach((num, index) => {
+            qb.orWhere(`cars.capacity = :num${index}`, {
+              [`num${index}`]: num,
+            });
+          });
+        }),
+      );
     }
     if (+max_price) {
       queryBuilder.andWhere('cars.price <= :max_price', { max_price });
@@ -63,19 +88,19 @@ export class CarsService {
       queryBuilder
         .andWhere(
           new Brackets((qb) => {
-            qb.andWhere('car_locations.name = :pick_up', {
-              pick_up: 'pick_up',
-            }).andWhere('car_locations.city_id = :pick_up_city_id', {
-              pick_up_city_id: +pick_up_city_id,
+            qb.where('car_locations.city_id = :pick_up_city_id', {
+              pick_up_city_id,
+            }).andWhere('car_locations.name = :pick_up', {
+              pick_up: PICK_UP,
             });
           }),
         )
         .orWhere(
           new Brackets((qb) => {
-            qb.andWhere('car_locations.name = :drop_off', {
-              drop_off: 'drop_off',
-            }).andWhere('car_locations.city_id = :drop_off_city_id', {
-              drop_off_city_id: +drop_off_city_id,
+            qb.where('car_locations.city_id = :drop_off_city_id', {
+              drop_off_city_id,
+            }).andWhere('car_locations.name = :drop_off', {
+              drop_off: DROP_OFF,
             });
           }),
         )
@@ -84,7 +109,7 @@ export class CarsService {
     } else if (+pick_up_city_id) {
       queryBuilder
         .andWhere('car_locations.name = :name', {
-          name: 'pick_up',
+          name: PICK_UP,
         })
         .andWhere('car_locations.city_id = :pick_up_city_id', {
           pick_up_city_id: +pick_up_city_id,
@@ -92,11 +117,35 @@ export class CarsService {
     } else if (+drop_off_city_id) {
       queryBuilder
         .andWhere('car_locations.name = :name', {
-          name: 'drop_off',
+          name: DROP_OFF,
         })
         .andWhere('car_locations.city_id = :drop_off_city_id', {
           drop_off_city_id: +drop_off_city_id,
         });
+    }
+
+    if (pick_up_datetime && drop_off_datetime) {
+      queryBuilder
+        .andWhere(
+          new Brackets((qb) => {
+            qb.where('order_details.pick_up_datetime > :drop_off_datetime', {
+              drop_off_datetime,
+            }).orWhere('order_details.drop_off_datetime < :pick_up_datetime', {
+              pick_up_datetime,
+            });
+          }),
+        )
+        .orWhere('order_details.id is null');
+    } else if (pick_up_datetime) {
+      queryBuilder.andWhere(
+        'order_details.pick_up_datetime > :drop_off_datetime',
+        { drop_off_datetime },
+      );
+    } else if (drop_off_datetime) {
+      queryBuilder.andWhere(
+        'order_details.drop_off_datetime > :pick_up_datetime',
+        { pick_up_datetime },
+      );
     }
 
     const panigation = handleGetLimitAndOffset(

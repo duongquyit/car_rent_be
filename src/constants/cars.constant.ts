@@ -7,6 +7,7 @@ export const SELECT_COL_DEFAULT = [
   'cars.gasoline',
   'cars.base_price',
   'cars.price',
+  'cars.image_thumbnail',
   'master_type_translation.id',
   'master_type_translation.name',
   'car_translation.id',
