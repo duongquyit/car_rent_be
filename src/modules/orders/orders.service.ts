@@ -13,6 +13,7 @@ import {
   A_DAY_IN_MILLISECONDS,
   OPEN_STATUS,
   SUCCESS_STATUS,
+  ORDER_DETAIL_SELECT_COLS,
 } from 'src/constants/order.constant';
 import PayoutFactory from '../payment-methods/payment-method-factory/payout-factory';
 import IPayOut from '../payment-methods/payment-method-factory/interfaces/payout.interface';
@@ -159,5 +160,29 @@ export class OrdersService {
     const days: number = Math.ceil((end - start) / A_DAY_IN_MILLISECONDS);
 
     return days * price * quantity;
+  }
+
+  async getOrderDetail(id: number, lang: string): Promise<OrderDetail[]> {
+    const queryBuilder = this.orderDetailRepository
+      .createQueryBuilder('order_details')
+      .innerJoin('order_details.car', 'car')
+      .innerJoin(
+        'car.car_translation',
+        'car_translation',
+        'car_translation.code = :lang',
+        { lang },
+      )
+      .innerJoin('order_details.pick_up_city', 'pick_up_city')
+      .innerJoin('order_details.drop_off_city', 'drop_off_city')
+      .innerJoin('car.car_types', 'car_types')
+      .innerJoin('car_types.master_type', 'master_type')
+      .innerJoin(
+        'master_type.master_type_translation',
+        'master_type_translation',
+      )
+      .where('order_details.order_id = :order_id', { order_id: id })
+      .select(ORDER_DETAIL_SELECT_COLS);
+
+    return await queryBuilder.getMany();
   }
 }
