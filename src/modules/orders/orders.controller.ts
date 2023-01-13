@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { ApiHeader, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiHeader, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { Request } from 'express';
 
@@ -19,12 +19,8 @@ export class OrdersController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  @ApiHeader({ name: 'Authorization' })
-  create(
-    @Body() createOrderDto: CreateOrderDto,
-    @Req() req: Request,
-    @Headers() header: any,
-  ) {
+  @ApiBearerAuth()
+  create(@Body() createOrderDto: CreateOrderDto, @Req() req: Request) {
     return this.ordersService.create(createOrderDto, req.user);
   }
 }
