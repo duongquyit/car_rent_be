@@ -1,4 +1,4 @@
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { I18nModule } from 'nestjs-i18n';
 import * as path from 'path';
@@ -24,6 +24,7 @@ import { OrdersModule } from './modules/orders/orders.module';
 import { OrderDetailsModule } from './modules/order-details/order-details.module';
 import { CarFavoritesModule } from './modules/car-favorites/car-favorites.module';
 import { MailModule } from './modules/mailer/mail.module';
+import { BullModule } from '@nestjs/bull';
 
 @Module({
   imports: [
@@ -56,6 +57,16 @@ import { MailModule } from './modules/mailer/mail.module';
         },
         typesOutputPath: path.join(__dirname, '../src/i18n/i18n.generated.ts'),
       }),
+    }),
+    BullModule.forRootAsync({
+      useFactory: async (configService: ConfigService) => ({
+        redis: {
+          host: configService.get('REDIS_HOST'),
+          port: configService.get('REDIS_PORT'),
+        },
+        prefix: configService.get('REDIS_PREFIX'),
+      }),
+      inject: [ConfigService],
     }),
     MailModule,
     UsersModule,

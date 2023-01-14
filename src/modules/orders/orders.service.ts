@@ -74,6 +74,8 @@ export class OrdersService {
 
     if (payOut.pay()) {
       // create new transation.
+    } else {
+      throw new BadRequestException('order.FEC-0046');
     }
 
     return { ...orderResult, ...orderDetails, id: newOrder.id };

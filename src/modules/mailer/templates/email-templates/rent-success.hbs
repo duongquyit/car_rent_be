@@ -1,0 +1,16 @@
+{{#> email-layout}}
+<p>Dear {{params.bill_name}}!</p><br />
+<p>Thank you for order</p><br />
+<div class='order-information'>
+  <p>Your order details</p>
+  <ul>
+    <li>Order ID: {{params.id}}</li>
+    <li>Customer name: {{params.bill_name}}</li>
+    <li>Phone: {{params.bill_phone_number}}</li>
+    <li>Address: {{params.bill_address}}, {{params.bill_city}}</li>
+    <li>Pick up date: {{params.pick_up_datetime}}</li>
+    <li>Drop off date: {{params.drop_off_datetime}}</li>
+    <li>Status: {{params.status}}</li>
+  </ul>
+</div>
+{{/email-layout}}
