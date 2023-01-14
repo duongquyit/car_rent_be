@@ -6,6 +6,9 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { I18nContext } from 'nestjs-i18n';
+import { sentryReport } from 'src/helpers/sentry.helper';
+import * as Sentry from '@sentry/node';
+import { handFormatError } from 'src/helpers/handle-format-error.helper';
 
 @Catch(UnauthorizedException)
 export class UnauthorizedExceptionFilter implements ExceptionFilter {
@@ -14,16 +17,13 @@ export class UnauthorizedExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const status = exception.getStatus();
     const i18n = I18nContext.current(host);
+    const request = ctx.getRequest();
 
-    console.log('UnauthorizedException');
+    const error = handFormatError(exception, i18n);
+    sentryReport(exception, request, error.error_id, error.message);
 
     response.status(status).json({
-      error: {
-        error_id: i18n.t(`${exception.message}.code_id`),
-        code: i18n.t(`${exception.message}.app_code`),
-        title: i18n.t(`${exception.message}.title`),
-        message: i18n.t(`${exception.message}.prod`),
-      },
+      error,
     });
   }
 }

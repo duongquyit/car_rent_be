@@ -5,10 +5,15 @@ import { LocalizeExceptionFilter } from './common/exception-filters/i18n-validat
 import { BadRequestExceptionFilter } from './common/exception-filters/badrequest-exception.filter';
 import { UnauthorizedExceptionFilter } from './common/exception-filters/unauthorized-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as SenTry from '@sentry/node';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api/v1/');
+  SenTry.init({
+    dsn: process.env.SENTRY_DSN,
+    environment: process.env.ENVIRONMENT,
+  });
   app.useGlobalPipes(
     new I18nValidationPipe({
       whitelist: true,

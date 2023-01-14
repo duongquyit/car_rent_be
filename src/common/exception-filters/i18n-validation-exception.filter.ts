@@ -5,7 +5,6 @@ import { I18nContext, I18nValidationException } from 'nestjs-i18n';
 @Catch()
 export class LocalizeExceptionFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
-    console.log(exception);
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const status = exception.getStatus();
@@ -31,7 +30,7 @@ export class LocalizeExceptionFilter implements ExceptionFilter {
       error: {
         error_id: 1,
         code: 'Invalid',
-        title: 'titles',
+        title: 'Bad Request',
         message: exception.message,
         errors: errors,
       },
