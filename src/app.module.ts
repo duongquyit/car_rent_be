@@ -23,6 +23,7 @@ import { PaymentMethodsModule } from './modules/payment-methods/payment-methods.
 import { OrdersModule } from './modules/orders/orders.module';
 import { OrderDetailsModule } from './modules/order-details/order-details.module';
 import { CarFavoritesModule } from './modules/car-favorites/car-favorites.module';
+import { MailModule } from './modules/mailer/mail.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { CarFavoritesModule } from './modules/car-favorites/car-favorites.module
         typesOutputPath: path.join(__dirname, '../src/i18n/i18n.generated.ts'),
       }),
     }),
+    MailModule,
     UsersModule,
     AuthModule,
     OauthRefreshTokenModule,
