@@ -27,12 +27,12 @@ export class CarFavoritesService {
   async remove(id: number, user) {
     const user_id: number = user.user_id;
     const favorite: CarFavorite[] = await this.carFavoriteRepository.findBy({
-      id,
+      car_id: id,
       user_id,
     });
     if (!favorite.length) {
       throw new BadGatewayException('system.CFO-0018');
     }
-    return await this.carFavoriteRepository.softRemove({ id, user_id });
+    return await this.carFavoriteRepository.softRemove({ car_id: id, user_id });
   }
 }

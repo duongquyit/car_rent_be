@@ -17,5 +17,6 @@ export const formatCarResponseHelper = (car: any, fields: string[] = []) => {
       id: type.master_type?.id,
       name: type.master_type?.master_type_translation?.name,
     })),
+    is_favorite: car?.favorites?.length ? true : false,
   };
 };

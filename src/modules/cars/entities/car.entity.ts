@@ -83,3 +83,27 @@ export class Car extends DateTimeEntity {
   })
   favorites: CarFavorite[];
 }
+
+export const SELECT_COL_DEFAULT = [
+  'cars.id',
+  'cars.capacity',
+  'cars.gasoline',
+  'cars.base_price',
+  'cars.price',
+  'cars.image_thumbnail',
+  'master_type_translation.id',
+  'master_type_translation.name',
+  'car_translation.id',
+  'car_translation.name',
+  'car_translation.steering',
+  'car_types.id',
+  'car_types.car_id',
+  'car_types.type_id',
+  'master_type.id',
+];
+
+export const SELECT_CAR_IMAGES_COL = ['car_images.path', 'car_images.id'];
+
+export const SELECT_CAR_DESCRIPTION_COL = ['car_translation.description'];
+
+export const SELECT_CAR_FAVORITES_COL = ['favorites.user_id'];
