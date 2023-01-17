@@ -25,7 +25,9 @@ export class UsersService {
     return await this.userRepository.save({ ...createUserDto, password });
   }
 
-  findOne(id: number) {
-    `This action returns a #${id} user`;
+  async findOne(id: number) {
+    if (id) {
+      return await this.userRepository.findOne({ where: { id } });
+    }
   }
 }
