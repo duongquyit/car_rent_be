@@ -1,11 +1,22 @@
-import { Controller, Post, Body, Delete, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Delete,
+  UseGuards,
+  Req,
+  Get,
+} from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { CarsRequestParamsDto } from '../cars/dto/cars-request-params.dto';
+import { AuthRequire } from 'src/common/decorators/public.decorator';
+import { plainToInstance } from 'class-transformer';
+import { UserDto } from '../users/dto/user.dto';
 
 @Controller('auth')
 @ApiTags('api/v1/auth')
@@ -22,5 +33,14 @@ export class AuthController {
   @Delete()
   async logout(@Req() req: Request) {
     return await this.authService.logout(req.user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @AuthRequire()
+  @ApiBearerAuth()
+  @Get()
+  async getUser(@Req() req: Request) {
+    const user = await this.authService.getUser(req.user);
+    return plainToInstance(UserDto, user);
   }
 }

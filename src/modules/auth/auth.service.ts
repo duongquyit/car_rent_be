@@ -75,4 +75,13 @@ export class AuthService {
 
     return;
   }
+
+  async getUser(user: any): Promise<User> {
+    const userId = user.user_id;
+    const userInfor = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    return userInfor;
+  }
 }
