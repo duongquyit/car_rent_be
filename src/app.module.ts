@@ -2,7 +2,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { I18nModule } from 'nestjs-i18n';
 import * as path from 'path';
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { UsersModule } from './modules/users/users.module';
 import { DataSourceOptions } from 'typeorm';
 import { AuthModule } from './modules/auth/auth.module';
@@ -79,6 +79,11 @@ import {
       filename: LOG_FILE_NAME,
       maxFiles: LOG_FILE_MAX,
     }),
+    // CacheModule.register({
+    //   ttl: 5,
+    //   max: 100,
+    //   isGlobal: true,
+    // }),
     MailModule,
     UsersModule,
     AuthModule,
