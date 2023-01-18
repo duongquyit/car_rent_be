@@ -25,6 +25,12 @@ import { OrderDetailsModule } from './modules/order-details/order-details.module
 import { CarFavoritesModule } from './modules/car-favorites/car-favorites.module';
 import { MailModule } from './modules/mailer/mail.module';
 import { BullModule } from '@nestjs/bull';
+import { LoggerModule } from './modules/logger/logger.module';
+import {
+  LOG_DIR,
+  LOG_FILE_MAX,
+  LOG_FILE_NAME,
+} from './constants/logger.constant';
 
 @Module({
   imports: [
@@ -67,6 +73,11 @@ import { BullModule } from '@nestjs/bull';
         prefix: configService.get('REDIS_PREFIX'),
       }),
       inject: [ConfigService],
+    }),
+    LoggerModule.register({
+      dirname: LOG_DIR,
+      filename: LOG_FILE_NAME,
+      maxFiles: LOG_FILE_MAX,
     }),
     MailModule,
     UsersModule,
