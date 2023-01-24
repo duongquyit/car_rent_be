@@ -1,9 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { I18nValidationPipe } from 'nestjs-i18n';
-import { LocalizeExceptionFilter } from './common/exception-filters/i18n-validation-exception.filter';
-import { BadRequestExceptionFilter } from './common/exception-filters/badrequest-exception.filter';
-import { UnauthorizedExceptionFilter } from './common/exception-filters/unauthorized-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as SenTry from '@sentry/node';
 
@@ -28,9 +25,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  app.useGlobalFilters(new LocalizeExceptionFilter());
-  app.useGlobalFilters(new BadRequestExceptionFilter());
-  app.useGlobalFilters(new UnauthorizedExceptionFilter());
   await app.listen(process.env.PORT);
 }
 bootstrap();

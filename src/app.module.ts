@@ -2,7 +2,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { I18nModule } from 'nestjs-i18n';
 import * as path from 'path';
-import { CacheModule, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { UsersModule } from './modules/users/users.module';
 import { DataSourceOptions } from 'typeorm';
 import { AuthModule } from './modules/auth/auth.module';
@@ -16,7 +16,7 @@ import { CarTypesModule } from './modules/car-types/car-types.module';
 import { MasterTypeTranslationsModule } from './modules/master-type-translations/master-type-translations.module';
 import { CarLocationsModule } from './modules/car-locations/car-locations.module';
 import { CarImagesModule } from './modules/car-images/car-images.module';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { ResponseSerializeInterceptor } from './common/interceptors/response-serialize.interceptor';
 import { ReviewsModule } from './modules/reviews/reviews.module';
 import { PaymentMethodsModule } from './modules/payment-methods/payment-methods.module';
@@ -31,6 +31,7 @@ import {
   LOG_FILE_MAX,
   LOG_FILE_NAME,
 } from './constants/logger.constant';
+import { AppExceptionFilter } from './common/exception-filters/app.exception-filter';
 
 @Module({
   imports: [
@@ -79,11 +80,6 @@ import {
       filename: LOG_FILE_NAME,
       maxFiles: LOG_FILE_MAX,
     }),
-    // CacheModule.register({
-    //   ttl: 5,
-    //   max: 100,
-    //   isGlobal: true,
-    // }),
     MailModule,
     UsersModule,
     AuthModule,
@@ -108,6 +104,10 @@ import {
     {
       provide: APP_INTERCEPTOR,
       useClass: ResponseSerializeInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: AppExceptionFilter,
     },
   ],
 })
