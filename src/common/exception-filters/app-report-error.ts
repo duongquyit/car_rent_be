@@ -11,6 +11,7 @@ export class ErrorReport {
         http_status: (exception as HttpException).getStatus(),
         endpoint: url,
         error_id: errorId,
+        request_id: request.id,
       });
 
       scope.setExtra('url', url);

@@ -32,7 +32,7 @@ export class AppExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest();
 
     let error: AppError;
-    let errorResponse: ErrorResponse;
+    let errorResponse;
 
     if (exception instanceof UnauthorizedException) {
       error = new UnauthorizedError(exception.message);
@@ -53,7 +53,11 @@ export class AppExceptionFilter implements ExceptionFilter {
 
     if (error.isReport()) {
       const errorReport = new ErrorReport();
-      errorReport.reportErrorToSentry(exception, request, error.getErrorId());
+      errorReport.reportErrorToSentry(
+        exception,
+        request,
+        errorResponse.error_id,
+      );
     }
 
     const statusCode: HttpStatus = error.getStatus();
