@@ -1,19 +1,10 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Delete,
-  UseGuards,
-  Req,
-  Get,
-} from '@nestjs/common';
+import { Controller, Post, Delete, UseGuards, Req, Get } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
-import { CarsRequestParamsDto } from '../cars/dto/cars-request-params.dto';
 import { AuthRequire } from 'src/common/decorators/public.decorator';
 import { plainToInstance } from 'class-transformer';
 import { UserDto } from '../users/dto/user.dto';
@@ -25,11 +16,14 @@ export class AuthController {
 
   @UseGuards(AuthGuard('local'))
   @Post()
+  @ApiBody({ type: CreateAuthDto })
   async signin(@Req() req: any) {
     return await this.authService.signin(req.user);
   }
 
   @UseGuards(JwtAuthGuard)
+  @AuthRequire()
+  @ApiBearerAuth()
   @Delete()
   async logout(@Req() req: Request) {
     return await this.authService.logout(req.user);

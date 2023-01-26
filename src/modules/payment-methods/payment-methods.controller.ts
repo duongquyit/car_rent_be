@@ -12,9 +12,4 @@ export class PaymentMethodsController {
     const items = await this.paymentMethodsService.findAll();
     return { items };
   }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.paymentMethodsService.findOne(+id);
-  }
 }

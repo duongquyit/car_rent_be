@@ -13,8 +13,4 @@ export class MasterCitiesService {
     const cities = await this.masterCity.find({});
     return cities;
   }
-
-  findOne(id: number) {
-    return `This action returns a #${id} masterCity`;
-  }
 }

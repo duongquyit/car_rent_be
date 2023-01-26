@@ -15,9 +15,4 @@ export class MasterCitiesController {
     const cities = await this.masterCitiesService.findAll();
     return { items: cities };
   }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.masterCitiesService.findOne(+id);
-  }
 }

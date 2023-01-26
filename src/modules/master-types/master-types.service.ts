@@ -29,8 +29,4 @@ export class MasterTypesService {
 
     return types;
   }
-
-  findOne(id: number) {
-    return `This action returns a #${id} masterType`;
-  }
 }

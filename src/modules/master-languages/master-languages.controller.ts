@@ -6,14 +6,4 @@ export class MasterLanguagesController {
   constructor(
     private readonly masterLanguagesService: MasterLanguagesService,
   ) {}
-
-  @Get()
-  findAll() {
-    return this.masterLanguagesService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.masterLanguagesService.findOne(+id);
-  }
 }
