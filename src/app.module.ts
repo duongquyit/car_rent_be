@@ -32,6 +32,7 @@ import {
   LOG_FILE_NAME,
 } from './constants/logger.constant';
 import { AppExceptionFilter } from './common/exception-filters/app.exception-filter';
+import { EN, JA } from './constants/language.constant';
 
 @Module({
   imports: [
@@ -57,7 +58,13 @@ import { AppExceptionFilter } from './common/exception-filters/app.exception-fil
     }),
     I18nModule.forRootAsync({
       useFactory: async () => ({
-        fallbackLanguage: 'en',
+        fallbackLanguage: EN,
+        fallbacks: {
+          en: EN,
+          'en-*': EN,
+          ja: JA,
+          'ja-*': JA,
+        },
         loaderOptions: {
           path: path.join(__dirname, '../i18n/'),
           watch: true,

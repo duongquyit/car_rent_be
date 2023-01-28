@@ -11,6 +11,11 @@ import { Brackets, Repository } from 'typeorm';
 import { handleGetLimitAndOffset } from 'src/helpers/panigation.helper';
 import { LIMIT_DEFAULT, OFFSET_DEFAULT } from 'src/constants/cars.constant';
 import { PICK_UP, DROP_OFF } from 'src/constants/car-locations';
+import {
+  INPROGRESS_STATUS,
+  OPEN_STATUS,
+  SUCCESS_STATUS,
+} from 'src/constants/order.constant';
 
 @Injectable()
 export class CarsService {
@@ -30,18 +35,13 @@ export class CarsService {
       offset,
     } = query;
 
-    const userId: number = user.user_id;
-
-    const queryBuilder = this.carDefaultQueryBuilder(this.carRepository);
+    const queryBuilder = this.carDefaultQueryBuilder(this.carRepository, lang);
     queryBuilder
       .leftJoin('cars.order_details', 'order_details')
-      .leftJoin('order_details.order', 'order')
       .leftJoin('cars.favorites', 'favorites', 'favorites.user_id = :user_id', {
-        user_id: userId,
+        user_id: user.user_id,
       })
-      .addSelect(SELECT_CAR_FAVORITES_COL)
-      .andWhere('car_translation.code = :lang', { lang })
-      .andWhere('master_type_translation.code = :lang', { lang });
+      .addSelect(SELECT_CAR_FAVORITES_COL);
 
     if (name?.trim()) {
       queryBuilder.andWhere('car_translation.name like :name', {
@@ -60,7 +60,6 @@ export class CarsService {
         }),
       );
     }
-
     if (capacity) {
       const carCapacities = Array.isArray(capacity) ? capacity : [capacity];
       queryBuilder.andWhere(
@@ -76,68 +75,95 @@ export class CarsService {
     if (+max_price) {
       queryBuilder.andWhere('cars.price <= :max_price', { max_price });
     }
-    if (+pick_up_city_id && +drop_off_city_id) {
-      queryBuilder
-        .andWhere(
-          new Brackets((qb) => {
-            qb.where('car_locations.city_id = :pick_up_city_id', {
-              pick_up_city_id,
-            }).andWhere('car_locations.name = :pick_up', {
-              pick_up: PICK_UP,
-            });
-          }),
-        )
-        .orWhere(
-          new Brackets((qb) => {
-            qb.where('car_locations.city_id = :drop_off_city_id', {
-              drop_off_city_id,
-            }).andWhere('car_locations.name = :drop_off', {
-              drop_off: DROP_OFF,
-            });
-          }),
-        )
-        .groupBy('car_locations.car_id')
-        .having('count(car_locations.car_id) = 2');
-    } else if (+pick_up_city_id) {
-      queryBuilder
-        .andWhere('car_locations.name = :name', {
+    if (+pick_up_city_id) {
+      queryBuilder.innerJoin(
+        'cars.car_locations',
+        'pick_up_car_locations',
+        'pick_up_car_locations.name = :name AND pick_up_car_locations.city_id = :city_id',
+        {
           name: PICK_UP,
-        })
-        .andWhere('car_locations.city_id = :pick_up_city_id', {
-          pick_up_city_id: +pick_up_city_id,
-        });
-    } else if (+drop_off_city_id) {
-      queryBuilder
-        .andWhere('car_locations.name = :name', {
-          name: DROP_OFF,
-        })
-        .andWhere('car_locations.city_id = :drop_off_city_id', {
-          drop_off_city_id: +drop_off_city_id,
-        });
+          city_id: +pick_up_city_id,
+        },
+      );
     }
-
+    if (+drop_off_city_id) {
+      queryBuilder.innerJoin(
+        'cars.car_locations',
+        'drop_off_car_locations',
+        'drop_off_car_locations.name = :name AND drop_off_car_locations.city_id = :city_id',
+        {
+          name: DROP_OFF,
+          city_id: +pick_up_city_id,
+        },
+      );
+    }
     if (pick_up_datetime && drop_off_datetime) {
       queryBuilder
+        .andWhere('cars.id = order_details.car_id')
         .andWhere(
-          new Brackets((qb) => {
-            qb.where('order_details.pick_up_datetime > :drop_off_datetime', {
-              drop_off_datetime,
-            }).orWhere('order_details.drop_off_datetime < :pick_up_datetime', {
-              pick_up_datetime,
-            });
-          }),
+          `NOT EXISTS (
+            SELECT car_id FROM order_details
+            LEFT JOIN orders ON order_details.order_id = orders.id
+            WHERE cars.id = order_details.car_id 
+            AND (
+              order_details.pick_up_datetime BETWEEN :pick_up_datetime AND :drop_off_datetime 
+              OR order_details.drop_off_datetime BETWEEN :pick_up_datetime AND :drop_off_datetime
+            )
+            AND orders.status IN (:open, :success, :inprogress)
+          )`,
+          {
+            pick_up_datetime,
+            drop_off_datetime,
+            open: OPEN_STATUS,
+            success: SUCCESS_STATUS,
+            inprogress: INPROGRESS_STATUS,
+          },
         )
         .orWhere('order_details.id is null');
     } else if (pick_up_datetime) {
-      queryBuilder.andWhere(
-        'order_details.pick_up_datetime > :drop_off_datetime',
-        { drop_off_datetime },
-      );
+      queryBuilder
+        .andWhere('cars.id = order_details.car_id')
+        .andWhere(
+          `NOT EXISTS (
+            SELECT car_id FROM order_details
+            LEFT JOIN orders on order_details.order_id = orders.id
+            WHERE cars.id = order_details.car_id 
+            AND (
+              order_details.pick_up_datetime < :datetime 
+              AND order_details.drop_off_datetime > :datetime
+            )
+            AND orders.status IN (:open, :success, :inprogress)
+          )`,
+          {
+            datetime: pick_up_datetime,
+            open: OPEN_STATUS,
+            success: SUCCESS_STATUS,
+            inprogress: INPROGRESS_STATUS,
+          },
+        )
+        .orWhere('order_details.id is null');
     } else if (drop_off_datetime) {
-      queryBuilder.andWhere(
-        'order_details.drop_off_datetime > :pick_up_datetime',
-        { pick_up_datetime },
-      );
+      queryBuilder
+        .andWhere('cars.id = order_details.car_id')
+        .andWhere(
+          `NOT EXISTS (
+            SELECT car_id FROM order_details
+            LEFT JOIN orders on order_details.order_id = orders.id 
+            WHERE cars.id = order_details.car_id 
+            AND (
+              order_details.pick_up_datetime < :datetime 
+              AND order_details.drop_off_datetime > :datetime
+            )
+            AND orders.status IN (:open, :success, :inprogress)
+          )`,
+          {
+            datetime: drop_off_datetime,
+            open: OPEN_STATUS,
+            success: SUCCESS_STATUS,
+            inprogress: INPROGRESS_STATUS,
+          },
+        )
+        .orWhere('order_details.id is null');
     }
 
     const panigation = handleGetLimitAndOffset(
@@ -155,37 +181,39 @@ export class CarsService {
   }
 
   async findOne(id: number, lang: string, user: any) {
-    const userId = user.user_id;
-    const queryBuilder = this.carDefaultQueryBuilder(this.carRepository);
+    const queryBuilder = this.carDefaultQueryBuilder(this.carRepository, lang);
     queryBuilder
       .leftJoin('cars.car_images', 'car_images')
       .leftJoin('cars.favorites', 'favorites', 'favorites.user_id = :user_id', {
-        user_id: userId,
+        user_id: user.user_id,
       })
       .addSelect([
         ...SELECT_CAR_IMAGES_COL,
         ...SELECT_CAR_DESCRIPTION_COL,
         ...SELECT_CAR_FAVORITES_COL,
       ])
-      .andWhere('cars.id = :id', { id })
-      .andWhere('car_translation.code = :lang', { lang })
-      .andWhere('master_type_translation.code = :lang', { lang });
+      .andWhere('cars.id = :id', { id });
 
     return await queryBuilder.getOne();
   }
 
-  carDefaultQueryBuilder = (carRepository: Repository<Car>) => {
+  carDefaultQueryBuilder = (carRepository: Repository<Car>, lang: string) => {
     const queryBuilder = carRepository
       .createQueryBuilder('cars')
-      .leftJoin('cars.car_translation', 'car_translation')
+      .leftJoin(
+        'cars.car_translation',
+        'car_translation',
+        'car_translation.code = :lang',
+        { lang },
+      )
       .leftJoin('cars.car_types', 'car_types')
       .leftJoin('car_types.master_type', 'master_type')
       .leftJoin(
         'master_type.master_type_translation',
         'master_type_translation',
+        'master_type_translation.code = :lang',
+        { lang },
       )
-      .leftJoin('cars.car_locations', 'car_locations')
-      .leftJoin('car_locations.city', 'city')
       .select(SELECT_COL_DEFAULT);
 
     return queryBuilder;

@@ -1,27 +1,34 @@
-import { Controller, Get, Param, Query, Req } from '@nestjs/common';
+import { Controller, Get, Headers, Param, Query, Req } from '@nestjs/common';
 import { CarsService } from './cars.service';
 import { CarsRequestParamsDto } from './dto/cars-request-params.dto';
-import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { formatCarResponseHelper } from 'src/helpers/formart-car-response.helper';
-import { I18n, I18nContext } from 'nestjs-i18n';
+import { I18nLang, I18nService } from 'nestjs-i18n';
 import { Request } from 'express';
-
+import { EN } from 'src/constants/language.constant';
 @Controller('cars')
 @ApiTags('api/v1/cars')
 export class CarsController {
-  constructor(private readonly carsService: CarsService) {}
+  constructor(
+    private readonly carsService: CarsService,
+    private readonly i18nService: I18nService,
+  ) {}
 
   @Get()
   @ApiBearerAuth()
   @ApiQuery({ type: CarsRequestParamsDto })
+  @ApiHeader({
+    name: 'accept-language',
+    required: false,
+  })
   async findAll(
     @Query() query: Request,
-    @I18n() i18n: I18nContext,
     @Req() req: Request,
+    @Headers('accept-language') lang: string,
   ) {
     const { data, panigation } = await this.carsService.findAll(
       query,
-      i18n.lang,
+      this.i18nService.resolveLanguage(lang || EN),
       req.user,
     );
 
@@ -35,12 +42,20 @@ export class CarsController {
 
   @Get(':id')
   @ApiBearerAuth()
+  @ApiHeader({
+    name: 'accept-language',
+    required: false,
+  })
   async findOne(
     @Param('id') id: string,
-    @I18n() i18n: I18nContext,
     @Req() req: Request,
+    @Headers('accept-language') lang: string,
   ) {
-    const item = await this.carsService.findOne(+id, i18n.lang, req.user);
+    const item = await this.carsService.findOne(
+      +id,
+      this.i18nService.resolveLanguage(lang),
+      req.user,
+    );
 
     return {
       ...formatCarResponseHelper(item, ['description']),
