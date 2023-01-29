@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 import { Car } from '../cars/entities/car.entity';
 import { Order } from './entities/order.entity';
 import {
@@ -102,18 +102,21 @@ export class OrdersService {
       .innerJoin('order_details.order', 'order')
       .where('order_details.car_id = :carId', { carId })
       .andWhere(
-        'order_details.pick_up_datetime BETWEEN :pick_up_datetime AND :drop_off_datetime',
-        {
-          pick_up_datetime,
-          drop_off_datetime,
-        },
-      )
-      .orWhere(
-        'order_details.drop_off_datetime BETWEEN :pick_up_datetime AND :drop_off_datetime',
-        {
-          pick_up_datetime,
-          drop_off_datetime,
-        },
+        new Brackets((qb) => {
+          qb.where(
+            'order_details.pick_up_datetime BETWEEN :pick_up_datetime AND :drop_off_datetime',
+            {
+              pick_up_datetime,
+              drop_off_datetime,
+            },
+          ).orWhere(
+            'order_details.drop_off_datetime BETWEEN :pick_up_datetime AND :drop_off_datetime',
+            {
+              pick_up_datetime,
+              drop_off_datetime,
+            },
+          );
+        }),
       )
       .andWhere('order.status IN (:open, :success, :inprogress)', {
         open: OPEN_STATUS,
