@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Brackets, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Car } from '../cars/entities/car.entity';
 import { Order } from './entities/order.entity';
 import {
@@ -16,6 +16,7 @@ import {
   A_DAY_IN_MILLISECONDS,
   OPEN_STATUS,
   SUCCESS_STATUS,
+  INPROGRESS_STATUS,
 } from 'src/constants/order.constant';
 import PayoutFactory from '../payment-methods/payment-method-factory/payout-factory';
 import IPayOut from '../payment-methods/payment-method-factory/interfaces/payout.interface';
@@ -98,26 +99,29 @@ export class OrdersService {
 
     const queryBuilder = this.orderDetailRepository
       .createQueryBuilder('order_details')
-      .where('order_details.car_id = :car_id', { car_id: carId })
+      .innerJoin('order_details.order', 'order')
+      .where('order_details.car_id = :carId', { carId })
       .andWhere(
-        new Brackets((qb) => {
-          qb.where(
-            'order_details.drop_off_datetime between :pick_up_datetime and :drop_off_datetime',
-            {
-              pick_up_datetime,
-              drop_off_datetime,
-            },
-          ).orWhere(
-            'order_details.pick_up_datetime between :pick_up_datetime and :drop_off_datetime',
-            {
-              pick_up_datetime,
-              drop_off_datetime,
-            },
-          );
-        }),
-      );
-    const carsAmount: number = await queryBuilder.getCount();
+        'order_details.pick_up_datetime BETWEEN :pick_up_datetime AND :drop_off_datetime',
+        {
+          pick_up_datetime,
+          drop_off_datetime,
+        },
+      )
+      .orWhere(
+        'order_details.drop_off_datetime BETWEEN :pick_up_datetime AND :drop_off_datetime',
+        {
+          pick_up_datetime,
+          drop_off_datetime,
+        },
+      )
+      .andWhere('order.status IN (:open, :success, :inprogress)', {
+        open: OPEN_STATUS,
+        success: SUCCESS_STATUS,
+        inprogress: INPROGRESS_STATUS,
+      });
 
+    const carsAmount: number = await queryBuilder.getCount();
     if (carsAmount) {
       throw new BadRequestException('app.FEC-0044');
     }
@@ -159,8 +163,8 @@ export class OrdersService {
     quantity: number,
     price: number,
   ): number {
-    const start: number = new Date(pick_up_datetime).getMilliseconds();
-    const end: number = new Date(drop_off_datetime).getMilliseconds();
+    const start: number = new Date(pick_up_datetime).getTime();
+    const end: number = new Date(drop_off_datetime).getTime();
     const days: number = Math.ceil((end - start) / A_DAY_IN_MILLISECONDS);
 
     return days * price * quantity;

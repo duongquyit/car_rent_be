@@ -68,5 +68,19 @@
     "title": "In Preview (Not available for purchase)",
     "prod": "You cannot proceed purchasing during the preview mode FEC-0040",
     "inter": "You cannot proceed purchasing during the preview mode FEC-0040"
+  },
+  "FEC-0041": {
+    "code_id": "FEC-0041",
+    "app_code": "BAD_REQUEST",
+    "title": "Payment method invalid",
+    "prod": "Payment method invalid FEC-0041",
+    "inter": "Payment method invalid FEC-0041"
+  },
+  "FEC-0046": {
+    "code_id": "FEC-0046",
+    "app_code": "BAD_REQUEST",
+    "title": "Payment failed",
+    "prod": "Payment failed FEC-0046",
+    "inter": "Payment failed FEC-0046"
   }
 }
