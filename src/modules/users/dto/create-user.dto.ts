@@ -6,49 +6,68 @@ import {
   IsNumberString,
   MaxLength,
 } from 'class-validator';
+import {
+  IS_EMAIL_CODE,
+  IS_NOT_EMPTY_CODE,
+  MAX_LENGTH_CODE,
+  ONLY_ALPHA_CODE,
+  ONLY_NUMBER_CODE,
+} from 'src/constants/validation-code.constant';
 
 export class CreateUserDto {
   @ApiProperty()
   @IsNotEmpty({
-    message: 'system.CFO-0009',
+    message: IS_NOT_EMPTY_CODE,
   })
-  @IsAlpha()
+  @IsAlpha('en-US', { message: ONLY_ALPHA_CODE })
   @MaxLength(30, {
-    message: '',
+    message: MAX_LENGTH_CODE,
   })
   @ApiProperty()
   first_name: string;
 
   @IsNotEmpty({
-    message: 'system.CFO-0009',
+    message: IS_NOT_EMPTY_CODE,
   })
-  @MaxLength(30, {})
-  @IsAlpha()
+  @MaxLength(30, {
+    message: MAX_LENGTH_CODE,
+  })
+  @IsAlpha('en-US', { message: ONLY_ALPHA_CODE })
   @ApiProperty()
   last_name: string;
 
-  @IsEmail()
+  @IsEmail(
+    {},
+    {
+      message: IS_EMAIL_CODE,
+    },
+  )
   @IsNotEmpty({
-    message: 'system.CFO-0009',
+    message: IS_NOT_EMPTY_CODE,
   })
   email: string;
 
   @ApiProperty()
   @IsNotEmpty({
-    message: 'system.CFO-0009',
+    message: IS_NOT_EMPTY_CODE,
   })
   username: string;
 
   @ApiProperty()
   @IsNotEmpty({
-    message: 'system.CFO-0009',
+    message: IS_NOT_EMPTY_CODE,
   })
   password: string;
 
   @ApiProperty({ description: 'Only number' })
   @IsNotEmpty({
-    message: 'system.CFO-0009',
+    message: IS_NOT_EMPTY_CODE,
   })
-  @IsNumberString({})
+  @IsNumberString(
+    {},
+    {
+      message: ONLY_NUMBER_CODE,
+    },
+  )
   phone_number: string;
 }
