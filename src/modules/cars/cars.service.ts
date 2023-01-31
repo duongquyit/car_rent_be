@@ -9,7 +9,12 @@ import {
 } from './entities/car.entity';
 import { Brackets, Repository } from 'typeorm';
 import { handleGetLimitAndOffset } from 'src/helpers/panigation.helper';
-import { LIMIT_DEFAULT, OFFSET_DEFAULT } from 'src/constants/cars.constant';
+import {
+  CAR_POPULAR,
+  CAR_RECOMENDATION,
+  LIMIT_DEFAULT,
+  OFFSET_DEFAULT,
+} from 'src/constants/cars.constant';
 import { PICK_UP, DROP_OFF } from 'src/constants/car-locations';
 import {
   INPROGRESS_STATUS,
@@ -31,6 +36,7 @@ export class CarsService {
       drop_off_city_id,
       pick_up_datetime,
       drop_off_datetime,
+      order_by,
       limit,
       offset,
     } = query;
@@ -164,6 +170,23 @@ export class CarsService {
           },
         )
         .orWhere('order_details.id is null');
+    }
+
+    if (order_by === CAR_POPULAR) {
+      queryBuilder
+        .addSelect('COUNT(cars.id)', 'cnt_car_id')
+        .addGroupBy(
+          'cars.id, car_translation.id, car_types.id, master_type_translation.id',
+        )
+        .addOrderBy('cnt_car_id', 'DESC');
+    } else if (order_by === CAR_RECOMENDATION) {
+      queryBuilder
+        .leftJoin('cars.reviews', 'reviews')
+        .addSelect('AVG(reviews.stars)', 'avg_rating')
+        .addGroupBy(
+          'cars.id, car_translation.id, car_types.id, master_type_translation.id',
+        )
+        .addOrderBy('avg_rating', 'DESC');
     }
 
     const panigation = handleGetLimitAndOffset(

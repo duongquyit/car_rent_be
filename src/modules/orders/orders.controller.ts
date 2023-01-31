@@ -35,8 +35,8 @@ export class OrdersController {
   @ApiBearerAuth()
   async create(@Body() createOrderDto: CreateOrderDto, @Req() req: Request) {
     const order = await this.ordersService.create(createOrderDto, req.user);
-    // const user: User = await this.usersService.findOne(order.user_id);
-    // await this.mailService.requestSendMailAfterOrderSuccess(user.email, order);
+    const user: User = await this.usersService.findOne(order.user_id);
+    await this.mailService.requestSendMailAfterOrderSuccess(user.email, order);
     return order;
   }
 

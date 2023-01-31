@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmpty, IsOptional } from 'class-validator';
+import { CAR_POPULAR, CAR_RECOMENDATION } from 'src/constants/cars.constant';
 
 export class CarsRequestParamsDto {
   @ApiProperty({ required: false })
@@ -31,4 +31,7 @@ export class CarsRequestParamsDto {
 
   @ApiProperty({ required: false })
   offset: number;
+
+  @ApiProperty({ required: false, enum: [CAR_POPULAR, CAR_RECOMENDATION] })
+  order_by: string;
 }
