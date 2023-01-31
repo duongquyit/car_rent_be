@@ -8,10 +8,17 @@ import { OrderDetail } from '../order-details/entities/order-detail.entity';
 import { PaymentMethod } from '../payment-methods/entities/payment-method.entity';
 import { MailModule } from '../mailer/mail.module';
 import { UsersModule } from '../users/users.module';
+import { MasterCity } from '../master-cities/entities/master_city.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Car, Order, OrderDetail, PaymentMethod]),
+    TypeOrmModule.forFeature([
+      Car,
+      Order,
+      OrderDetail,
+      PaymentMethod,
+      MasterCity,
+    ]),
     MailModule,
     UsersModule,
   ],

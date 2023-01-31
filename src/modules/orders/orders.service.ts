@@ -20,6 +20,8 @@ import {
 } from 'src/constants/order.constant';
 import PayoutFactory from '../payment-methods/payment-method-factory/payout-factory';
 import IPayOut from '../payment-methods/payment-method-factory/interfaces/payout.interface';
+import { MasterCity } from '../master-cities/entities/master_city.entity';
+import { DROP_OFF, PICK_UP } from 'src/constants/car-locations';
 
 @Injectable()
 export class OrdersService {
@@ -30,6 +32,8 @@ export class OrdersService {
     private orderDetailRepository: Repository<OrderDetail>,
     @InjectRepository(PaymentMethod)
     private paymentMethodRepository: Repository<PaymentMethod>,
+    @InjectRepository(MasterCity)
+    private masterCityRepository: Repository<MasterCity>,
   ) {}
 
   async create(createOrderDto: CreateOrderDto, user: any): Promise<Order> {
@@ -38,8 +42,12 @@ export class OrdersService {
 
     const user_id: number = user.user_id;
 
-    const car: Car = await this.validateCarExists(+car_id);
-
+    const car: Car = await this.checkCarExists(+car_id);
+    await this.checkCarLocationInvalid(
+      +car.id,
+      rental_info.pick_up_city_id,
+      rental_info.drop_off_city_id,
+    );
     await this.checkCarAvaiable(+car_id, rental_info);
 
     const subTotal: number = this.getSubtotal(
@@ -82,7 +90,7 @@ export class OrdersService {
     return { ...orderResult, ...orderDetails, id: newOrder.id };
   }
 
-  async validateCarExists(carId: number): Promise<Car> {
+  async checkCarExists(carId: number): Promise<Car> {
     const car: Car = await this.carRepository.findOne({
       where: { id: +carId },
     });
@@ -145,6 +153,69 @@ export class OrdersService {
     if (start > end) {
       throw new BadRequestException('app.FEC-0043');
     }
+  }
+
+  async checkLocationExists(
+    pick_up_location: number,
+    drop_off_location: number,
+  ): Promise<void> {
+    const isExists =
+      (await this.masterCityRepository.exist({
+        where: { id: pick_up_location },
+      })) &&
+      (await this.masterCityRepository.exist({
+        where: { id: drop_off_location },
+      }));
+
+    if (!isExists) {
+      throw new BadRequestException('order.FEC-0048');
+    }
+  }
+
+  async checkCarContainLocations(
+    car_id: number,
+    pick_up_location: number,
+    drop_off_location: number,
+  ): Promise<void> {
+    const isContain = await this.carRepository
+      .createQueryBuilder('cars')
+      .innerJoin(
+        'cars.car_locations',
+        'pick_up_car_locations',
+        'pick_up_car_locations.name = :pick_up AND pick_up_car_locations.city_id = :pick_up_location',
+        {
+          pick_up: PICK_UP,
+          pick_up_location,
+        },
+      )
+      .innerJoin(
+        'cars.car_locations',
+        'drop_off_car_locations',
+        'drop_off_car_locations.name = :drop_off AND drop_off_car_locations.city_id = :drop_off_location',
+        {
+          drop_off: DROP_OFF,
+          drop_off_location,
+        },
+      )
+      .where('cars.id = :car_id', { car_id })
+      .getExists();
+
+    if (!isContain) {
+      throw new BadRequestException('order.FEC-0049');
+    }
+  }
+
+  async checkCarLocationInvalid(
+    car_id: number,
+    pick_up_location: number,
+    drop_off_location: number,
+  ): Promise<void> {
+    await this.checkLocationExists(pick_up_location, drop_off_location);
+    await this.checkCarContainLocations(
+      car_id,
+      pick_up_location,
+      drop_off_location,
+    );
   }
 
   async genetatePayout(paymentMethodDto: PaymentMethodDto): Promise<IPayOut> {
