@@ -2,7 +2,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { I18nModule } from 'nestjs-i18n';
 import * as path from 'path';
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { UsersModule } from './modules/users/users.module';
 import { DataSourceOptions } from 'typeorm';
 import { AuthModule } from './modules/auth/auth.module';
@@ -33,6 +33,7 @@ import {
 } from './constants/logger.constant';
 import { AppExceptionFilter } from './common/exception-filters/app.exception-filter';
 import { EN, JA } from './constants/language.constant';
+import * as redisStore from 'cache-manager-redis-store';
 
 @Module({
   imports: [
@@ -86,6 +87,18 @@ import { EN, JA } from './constants/language.constant';
       dirname: LOG_DIR,
       filename: LOG_FILE_NAME,
       maxFiles: LOG_FILE_MAX,
+    }),
+    CacheModule.registerAsync({
+      inject: [ConfigService],
+      isGlobal: true,
+      useFactory: (configService: ConfigService) => ({
+        store: redisStore,
+        ttl: configService.get<number>('REDIS_CACHE_TTL'),
+        max: configService.get<number>('REDIS_CACHE_MAX'),
+        host: configService.get<string>('REDIS_HOST'),
+        port: configService.get<number>('REDIS_PORT'),
+        prefix: configService.get<string>('REDIS_CACHE_PREFIX'),
+      }),
     }),
     MailModule,
     UsersModule,

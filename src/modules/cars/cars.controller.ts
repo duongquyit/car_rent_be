@@ -1,11 +1,21 @@
-import { Controller, Get, Headers, Param, Query, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Headers,
+  Param,
+  Query,
+  Req,
+  UseInterceptors,
+} from '@nestjs/common';
 import { CarsService } from './cars.service';
 import { CarsRequestParamsDto } from './dto/cars-request-params.dto';
 import { ApiBearerAuth, ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { formatCarResponseHelper } from 'src/helpers/formart-car-response.helper';
-import { I18nLang, I18nService } from 'nestjs-i18n';
+import { I18nService } from 'nestjs-i18n';
 import { Request } from 'express';
 import { EN } from 'src/constants/language.constant';
+import { CustomCacheInterceptor } from 'src/common/interceptors/custom-cache.interceptor';
+
 @Controller('cars')
 @ApiTags('api/v1/cars')
 export class CarsController {
