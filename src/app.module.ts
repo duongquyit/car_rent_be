@@ -23,16 +23,16 @@ import { PaymentMethodsModule } from './modules/payment-methods/payment-methods.
 import { OrdersModule } from './modules/orders/orders.module';
 import { OrderDetailsModule } from './modules/order-details/order-details.module';
 import { CarFavoritesModule } from './modules/car-favorites/car-favorites.module';
-import { MailModule } from './modules/mailer/mail.module';
+import { MailModule } from './shared/mailer/mail.module';
 import { BullModule } from '@nestjs/bull';
-import { LoggerModule } from './modules/logger/logger.module';
+import { LoggerModule } from './shared/logger/logger.module';
 import {
   LOG_DIR,
   LOG_FILE_MAX,
   LOG_FILE_NAME,
-} from './constants/logger.constant';
+} from './common/constants/logger.constant';
 import { AppExceptionFilter } from './common/exception-filters/app.exception-filter';
-import { EN, JA } from './constants/language.constant';
+import { EN, JA } from './common/constants/language.constant';
 import * as redisStore from 'cache-manager-redis-store';
 
 @Module({

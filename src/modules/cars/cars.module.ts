@@ -1,11 +1,10 @@
-import { CacheInterceptor, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { CarsService } from './cars.service';
 import { CarsController } from './cars.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Car } from './entities/car.entity';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
-import { CustomCacheInterceptor } from 'src/common/interceptors/custom-cache.interceptor';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Car])],
@@ -15,10 +14,6 @@ import { CustomCacheInterceptor } from 'src/common/interceptors/custom-cache.int
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: CustomCacheInterceptor,
     },
   ],
 })

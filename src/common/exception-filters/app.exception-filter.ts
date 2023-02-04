@@ -16,7 +16,7 @@ import {
 } from './errors-define';
 import { Response } from 'express';
 
-import { LoggerService } from 'src/modules/logger/logger.service';
+import { LoggerService } from 'src/shared/logger/logger.service';
 import { AppError } from './app.error';
 import { I18nValidationException } from 'nestjs-i18n';
 import { ErrorReport } from './app-report-error';

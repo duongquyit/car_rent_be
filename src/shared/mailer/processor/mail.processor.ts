@@ -1,6 +1,9 @@
 import { Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
-import { mailerQueue, orderSuccessJob } from 'src/constants/queue.constant';
+import {
+  mailerQueue,
+  orderSuccessJob,
+} from 'src/common/constants/queue.constant';
 import { MailService } from '../mail.service';
 
 @Processor(mailerQueue)

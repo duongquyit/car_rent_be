@@ -1,4 +1,7 @@
-import { LIMIT_DEFAULT, OFFSET_DEFAULT } from 'src/constants/cars.constant';
+import {
+  LIMIT_DEFAULT,
+  OFFSET_DEFAULT,
+} from 'src/common/constants/cars.constant';
 
 export type PanigationType = {
   limit: number;

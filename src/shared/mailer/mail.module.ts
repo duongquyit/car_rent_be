@@ -4,7 +4,7 @@ import { Module } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { MailProcessor } from './processor/mail.processor';
 import { BullModule } from '@nestjs/bull';
-import { mailerQueue } from 'src/constants/queue.constant';
+import { mailerQueue } from 'src/common/constants/queue.constant';
 import * as path from 'path';
 
 @Module({

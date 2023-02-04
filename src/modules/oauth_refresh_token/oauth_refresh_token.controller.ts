@@ -4,7 +4,7 @@ import { OauthRequestDto } from './dto/oauth-request-params.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller('oauth-refresh-token')
-@ApiTags('api/v1/oauth-refresh-token')
+@ApiTags('Oauth Refresh Token')
 export class OauthRefreshTokenController {
   constructor(
     private readonly oauthRefreshTokenService: OauthRefreshTokenService,

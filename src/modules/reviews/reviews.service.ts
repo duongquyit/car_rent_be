@@ -6,8 +6,8 @@ import {
   REVIEW_LIMIT_DEFAULT,
   REVIEW_OFFSET_DEFAULT,
   REVIEW_SELECT_COLS,
-} from 'src/constants/reviews.constant';
-import { handleGetLimitAndOffset } from 'src/helpers/panigation.helper';
+} from 'src/common/constants/reviews.constant';
+import { handleGetLimitAndOffset } from 'src/common/helpers/panigation.helper';
 
 @Injectable()
 export class ReviewsService {

@@ -1,6 +1,6 @@
 import { CacheInterceptor, ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
-import { EN } from 'src/constants/language.constant';
+import { EN } from 'src/common/constants/language.constant';
 
 export class CustomCacheInterceptor extends CacheInterceptor {
   trackBy(context: ExecutionContext): string | undefined {

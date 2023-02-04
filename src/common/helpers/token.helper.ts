@@ -1,4 +1,4 @@
-import { TOKEN_TYPE } from 'src/constants/auth.constant';
+import { TOKEN_TYPE } from 'src/common/constants/auth.constant';
 import { create_UUID } from './random-uuid.helper';
 import { CreateOauthRefreshTokenDto } from 'src/modules/oauth_refresh_token/dto/create-oauth_refresh_token.dto';
 

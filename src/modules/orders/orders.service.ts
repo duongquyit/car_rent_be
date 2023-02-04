@@ -17,11 +17,11 @@ import {
   OPEN_STATUS,
   SUCCESS_STATUS,
   INPROGRESS_STATUS,
-} from 'src/constants/order.constant';
+} from 'src/common/constants/order.constant';
 import PayoutFactory from '../payment-methods/payment-method-factory/payout-factory';
 import IPayOut from '../payment-methods/payment-method-factory/interfaces/payout.interface';
 import { MasterCity } from '../master-cities/entities/master_city.entity';
-import { DROP_OFF, PICK_UP } from 'src/constants/car-locations';
+import { DROP_OFF, PICK_UP } from 'src/common/constants/car-locations';
 
 @Injectable()
 export class OrdersService {

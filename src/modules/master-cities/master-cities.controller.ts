@@ -5,7 +5,7 @@ import { MasterCitiesDto } from './dto/master-cities.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller('master-cities')
-@ApiTags('api/v1/master-cities')
+@ApiTags('Master Cities')
 export class MasterCitiesController {
   constructor(private readonly masterCitiesService: MasterCitiesService) {}
 

@@ -4,7 +4,7 @@ import {
   IS_NOT_EMPTY_CODE,
   ONLY_ALPHA_CODE,
   ONLY_NUMBER_CODE,
-} from 'src/constants/validation-code.constant';
+} from 'src/common/constants/validation-code.constant';
 
 export class BillingInfoDto {
   @ApiProperty()

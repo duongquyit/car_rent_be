@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDateString } from 'class-validator';
-import { IS_DATETIME_CODE } from 'src/constants/validation-code.constant';
+import { IS_DATETIME_CODE } from 'src/common/constants/validation-code.constant';
 
 export class RentalInfoDto {
   @ApiProperty()

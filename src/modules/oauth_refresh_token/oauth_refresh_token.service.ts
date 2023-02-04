@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OauthRefreshToken } from './entities/oauth_refresh_token.entity';
 import { Repository } from 'typeorm';
-import { signToken } from '../../helpers/token.helper';
+import { signToken } from '../../common/helpers/token.helper';
 
 @Injectable()
 export class OauthRefreshTokenService {

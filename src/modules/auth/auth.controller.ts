@@ -10,7 +10,7 @@ import { plainToInstance } from 'class-transformer';
 import { UserDto } from '../users/dto/user.dto';
 
 @Controller('auth')
-@ApiTags('api/v1/auth')
+@ApiTags('Auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 

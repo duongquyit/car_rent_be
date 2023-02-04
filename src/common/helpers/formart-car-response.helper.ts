@@ -1,4 +1,4 @@
-import { CAR_IMAGE_THUMBNAIL_DEFAULT } from 'src/constants/cars.constant';
+import { CAR_IMAGE_THUMBNAIL_DEFAULT } from 'src/common/constants/cars.constant';
 
 export const formatCarResponseHelper = (car: any, fields: string[] = []) => {
   return {

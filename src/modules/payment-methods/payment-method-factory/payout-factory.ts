@@ -1,7 +1,7 @@
 import {
   COD_METHOD,
   STRIPE_METHOD,
-} from 'src/constants/payment-method.constant';
+} from 'src/common/constants/payment-method.constant';
 import CODPayout from './cod.payout';
 import IPayOut from './interfaces/payout.interface';
 import StripePayout from './stripe.payout';

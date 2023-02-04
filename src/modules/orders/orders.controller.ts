@@ -14,14 +14,14 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { Request } from 'express';
 import { I18n, I18nContext } from 'nestjs-i18n';
-import { handleResponseOrderDetail } from 'src/helpers/order-detail-response.helper';
-import { MailService } from '../mailer/mail.service';
+import { handleResponseOrderDetail } from 'src/common/helpers/order-detail-response.helper';
+import { MailService } from '../../shared/mailer/mail.service';
 import { AuthRequire } from 'src/common/decorators/public.decorator';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/entities/user.entity';
 
 @Controller('orders')
-@ApiTags('api/v1/orders')
+@ApiTags('Orders')
 export class OrdersController {
   constructor(
     private readonly ordersService: OrdersService,

@@ -2,8 +2,11 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { Queue } from 'bull';
-import { mailerQueue, orderSuccessJob } from 'src/constants/queue.constant';
-import { SUCCESS_CAR_RENT } from 'src/constants/send-mail-title.constant';
+import {
+  mailerQueue,
+  orderSuccessJob,
+} from 'src/common/constants/queue.constant';
+import { SUCCESS_CAR_RENT } from 'src/common/constants/send-mail-title.constant';
 
 @Injectable()
 export class MailService {

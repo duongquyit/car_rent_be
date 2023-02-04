@@ -12,7 +12,7 @@ import {
 import {
   IS_NOT_EMPTY_CODE,
   ONLY_NUMBER_CODE,
-} from 'src/constants/validation-code.constant';
+} from 'src/common/constants/validation-code.constant';
 
 export class CreateOrderDto {
   @ApiProperty()

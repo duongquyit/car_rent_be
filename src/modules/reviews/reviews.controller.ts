@@ -4,7 +4,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { ReviewRequestParamsDto } from './dto/review-request-params.dto';
 
 @Controller('reviews')
-@ApiTags('api/v1/reviews')
+@ApiTags('Reviews')
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 

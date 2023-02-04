@@ -4,7 +4,7 @@ import { ApiHeader, ApiTags } from '@nestjs/swagger';
 import { I18n, I18nContext } from 'nestjs-i18n';
 
 @Controller('master-types')
-@ApiTags('api/v1/master-types')
+@ApiTags('Master Types')
 export class MasterTypesController {
   constructor(private readonly masterTypesService: MasterTypesService) {}
 

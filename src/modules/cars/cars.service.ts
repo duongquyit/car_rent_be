@@ -8,19 +8,19 @@ import {
   SELECT_COL_DEFAULT,
 } from './entities/car.entity';
 import { Brackets, Repository } from 'typeorm';
-import { handleGetLimitAndOffset } from 'src/helpers/panigation.helper';
+import { handleGetLimitAndOffset } from 'src/common/helpers/panigation.helper';
 import {
   CAR_POPULAR,
   CAR_RECOMENDATION,
   LIMIT_DEFAULT,
   OFFSET_DEFAULT,
-} from 'src/constants/cars.constant';
-import { PICK_UP, DROP_OFF } from 'src/constants/car-locations';
+} from 'src/common/constants/cars.constant';
+import { PICK_UP, DROP_OFF } from 'src/common/constants/car-locations';
 import {
   INPROGRESS_STATUS,
   OPEN_STATUS,
   SUCCESS_STATUS,
-} from 'src/constants/order.constant';
+} from 'src/common/constants/order.constant';
 
 @Injectable()
 export class CarsService {

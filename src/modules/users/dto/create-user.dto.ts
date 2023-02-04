@@ -12,7 +12,7 @@ import {
   MAX_LENGTH_CODE,
   ONLY_ALPHA_CODE,
   ONLY_NUMBER_CODE,
-} from 'src/constants/validation-code.constant';
+} from 'src/common/constants/validation-code.constant';
 
 export class CreateUserDto {
   @ApiProperty()

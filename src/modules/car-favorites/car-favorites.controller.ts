@@ -17,7 +17,7 @@ import { CarFavorite } from './entities/car-favorite.entity';
 import { Request } from 'express';
 
 @Controller('car-favorites')
-@ApiTags('api/v1/car-favorites')
+@ApiTags('Car Favorites')
 export class CarFavoritesController {
   constructor(private readonly carFavoritesService: CarFavoritesService) {}
 

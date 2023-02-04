@@ -10,14 +10,15 @@ import {
 import { CarsService } from './cars.service';
 import { CarsRequestParamsDto } from './dto/cars-request-params.dto';
 import { ApiBearerAuth, ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { formatCarResponseHelper } from 'src/helpers/formart-car-response.helper';
+import { formatCarResponseHelper } from 'src/common/helpers/formart-car-response.helper';
 import { I18nService } from 'nestjs-i18n';
 import { Request } from 'express';
-import { EN } from 'src/constants/language.constant';
+import { EN } from 'src/common/constants/language.constant';
 import { CustomCacheInterceptor } from 'src/common/interceptors/custom-cache.interceptor';
 
 @Controller('cars')
-@ApiTags('api/v1/cars')
+@ApiTags('Cars')
+@UseInterceptors(CustomCacheInterceptor)
 export class CarsController {
   constructor(
     private readonly carsService: CarsService,

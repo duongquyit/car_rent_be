@@ -1,5 +1,5 @@
 import { I18nContext } from 'nestjs-i18n';
-import { EN } from 'src/constants/language.constant';
+import { EN } from 'src/common/constants/language.constant';
 import { ErrorDto } from './error.dto';
 
 export class ErrorResponse {

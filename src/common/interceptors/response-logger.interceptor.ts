@@ -8,7 +8,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 
-import { LoggerService } from '../../modules/logger/logger.service';
+import { LoggerService } from '../../shared/logger/logger.service';
 
 export type Response<T> = {
   data: T;

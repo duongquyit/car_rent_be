@@ -1,5 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CAR_POPULAR, CAR_RECOMENDATION } from 'src/constants/cars.constant';
+import {
+  CAR_POPULAR,
+  CAR_RECOMENDATION,
+} from 'src/common/constants/cars.constant';
 
 export class CarsRequestParamsDto {
   @ApiProperty({ required: false })

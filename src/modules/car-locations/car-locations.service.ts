@@ -6,8 +6,8 @@ import {
   CAR_LOCATION_SELECT_COLS,
   DROP_OFF,
   PICK_UP,
-} from 'src/constants/car-locations';
-import { formatCarLocationResponseHelper } from 'src/helpers/format-car-location-response.helper';
+} from 'src/common/constants/car-locations';
+import { formatCarLocationResponseHelper } from 'src/common/helpers/format-car-location-response.helper';
 
 @Injectable()
 export class CarLocationsService {
