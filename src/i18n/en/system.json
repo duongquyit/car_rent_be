@@ -55,6 +55,13 @@
     "prod": "{field} must be shorter than or equal to {max_len} characters CFO-0014",
     "inter": "{field} must be shorter than or equal to {max_len} characters CFO-0014"
   },
+  "CFO-0018": {
+    "code_id": "CFO-0018",
+    "app_code": "INVALID_PARAMETER",
+    "title": "id not exist.",
+    "prod": "id not exist. CFO-0018",
+    "inter": "id not exist. CFO-0018"
+  },
   "FEC-0034": {
     "code_id": "FEC-0034",
     "app_code": "BAD_REQUEST",

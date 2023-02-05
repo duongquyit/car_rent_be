@@ -1,6 +1,6 @@
 import { PickType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsAlpha, IsNotEmpty } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 import { CreateUserDto } from 'src/modules/users/dto/create-user.dto';
 
 export class CreateAuthDto extends PickType(CreateUserDto, [

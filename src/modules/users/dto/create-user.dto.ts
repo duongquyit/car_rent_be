@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsAlpha,
   IsEmail,
   IsNotEmpty,
   IsNumberString,
@@ -10,7 +9,6 @@ import {
   IS_EMAIL_CODE,
   IS_NOT_EMPTY_CODE,
   MAX_LENGTH_CODE,
-  ONLY_ALPHA_CODE,
   ONLY_NUMBER_CODE,
 } from 'src/common/constants/validation-code.constant';
 
@@ -19,7 +17,6 @@ export class CreateUserDto {
   @IsNotEmpty({
     message: IS_NOT_EMPTY_CODE,
   })
-  @IsAlpha('en-US', { message: ONLY_ALPHA_CODE })
   @MaxLength(30, {
     message: MAX_LENGTH_CODE,
   })
@@ -32,7 +29,6 @@ export class CreateUserDto {
   @MaxLength(30, {
     message: MAX_LENGTH_CODE,
   })
-  @IsAlpha('en-US', { message: ONLY_ALPHA_CODE })
   @ApiProperty()
   last_name: string;
 

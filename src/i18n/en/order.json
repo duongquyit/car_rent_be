@@ -82,5 +82,33 @@
     "title": "Payment failed",
     "prod": "Payment failed FEC-0046",
     "inter": "Payment failed FEC-0046"
+  },
+  "FEC-0047": {
+    "code_id": "FEC-0047",
+    "app_code": "BAD_REQUEST",
+    "title": "Date time invalid.",
+    "prod": "Date time is invalid. FEC-0047",
+    "inter": "Date time is invalid. FEC-0047"
+  },
+  "FEC-0048": {
+    "code_id": "FEC-0048",
+    "app_code": "BAD_REQUEST",
+    "title": "car location invalid",
+    "prod": "Car location is not exists FEC-0048",
+    "inter": "Car location is not exists FEC-0048"
+  },
+  "FEC-0049": {
+    "code_id": "FEC-0049",
+    "app_code": "BAD_REQUEST",
+    "title": "car location invalid",
+    "prod": "Car not not allow in FEC-0049",
+    "inter": "Car location is not exists FEC-0049"
+  },
+  "FEC-0050": {
+    "code_id": "FEC-0050",
+    "app_code": "BAD_REQUEST",
+    "title": "order not exists",
+    "prod": "Order can not found FEC-0050",
+    "inter": "Order can not found FEC-0050"
   }
 }
