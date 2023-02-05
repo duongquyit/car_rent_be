@@ -121,3 +121,20 @@ export class Order extends DateTimeEntity {
   })
   payment_method: PaymentMethod;
 }
+
+export const ORDER_DETAIL_SELECT_COLS = [
+  'orders.id',
+  'orders.total',
+  'order_details.id',
+  'order_details.pick_up_datetime',
+  'order_details.drop_off_datetime',
+  'pick_up_city.name',
+  'drop_off_city.name',
+  'car.id',
+  'car.image_thumbnail',
+  'car_translation.name',
+  'car_translation.steering',
+  'car_types.type_id',
+  'master_type.id',
+  'master_type_translation.name',
+];

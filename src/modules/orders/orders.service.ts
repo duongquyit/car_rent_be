@@ -3,11 +3,8 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Brackets, Repository } from 'typeorm';
 import { Car } from '../cars/entities/car.entity';
-import { Order } from './entities/order.entity';
-import {
-  ORDER_DETAIL_SELECT_COLS,
-  OrderDetail,
-} from '../order-details/entities/order-detail.entity';
+import { ORDER_DETAIL_SELECT_COLS, Order } from './entities/order.entity';
+import { OrderDetail } from '../order-details/entities/order-detail.entity';
 import { PaymentMethodDto } from './dto/payment-method-info.dto';
 import { PaymentMethod } from '../payment-methods/entities/payment-method.entity';
 import {
@@ -244,27 +241,50 @@ export class OrdersService {
     return days * price * quantity;
   }
 
-  async getOrderDetail(id: number, lang: string): Promise<OrderDetail[]> {
-    const queryBuilder = this.orderDetailRepository
-      .createQueryBuilder('order_details')
+  async getOrderDetail(id: number, lang: string): Promise<any> {
+    const queryBuilder = this.orderBuilderCommon(
+      this.orderRepository,
+      lang,
+    ).where('orders.id = :id', { id });
+    const order = await queryBuilder.getOne();
+    if (!order) {
+      throw new BadRequestException('order.FEC-0050');
+    }
+
+    return order;
+  }
+
+  async getOrdersDetail(user: any, lang: string): Promise<any> {
+    const queryBuilder = this.orderBuilderCommon(this.orderRepository, lang);
+    queryBuilder.innerJoin('orders.user', 'user', 'user.id = :user_id', {
+      user_id: user.user_id,
+    });
+    const orders = await queryBuilder.getMany();
+
+    return orders;
+  }
+
+  orderBuilderCommon(queryBuilder: Repository<Order>, lang: string) {
+    return queryBuilder
+      .createQueryBuilder('orders')
+      .innerJoin('orders.order_order_details', 'order_details')
+      .innerJoin('order_details.pick_up_city', 'pick_up_city')
+      .innerJoin('order_details.drop_off_city', 'drop_off_city')
       .innerJoin('order_details.car', 'car')
+      .innerJoin('car.car_translation', 'car_translation')
+      .innerJoin('car.car_types', 'car_types')
       .innerJoin(
-        'car.car_translation',
-        'car_translation',
+        'car_types.master_type',
+        'master_type',
         'car_translation.code = :lang',
         { lang },
       )
-      .innerJoin('order_details.pick_up_city', 'pick_up_city')
-      .innerJoin('order_details.drop_off_city', 'drop_off_city')
-      .innerJoin('car.car_types', 'car_types')
-      .innerJoin('car_types.master_type', 'master_type')
       .innerJoin(
         'master_type.master_type_translation',
         'master_type_translation',
+        'master_type_translation.code = :lang',
+        { lang },
       )
-      .where('order_details.order_id = :order_id', { order_id: id })
       .select(ORDER_DETAIL_SELECT_COLS);
-
-    return await queryBuilder.getMany();
   }
 }

@@ -7,7 +7,7 @@
     "assets": [
       { "include": "i18n/**/*", "watchAssets": true },
       {
-        "include": "modules/mailer/templates/**/*.hbs",
+        "include": "shared/mailer/templates/**/*.hbs",
         "outDir": "dist/src",
         "watchAssets": true
       }
