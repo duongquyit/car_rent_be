@@ -84,4 +84,15 @@ export class AuthService {
 
     return userInfor;
   }
+
+  async userIsLogout(user: any): Promise<boolean> {
+    const isExists = await this.oauthRefreshTokenRepository.exist({
+      where: {
+        user_id: user.user_id,
+        refresh_token: user.refresh_token_id,
+      },
+    });
+
+    return !isExists;
+  }
 }
