@@ -65,22 +65,8 @@
   "CFO-0015": {
     "code_id": "CFO-0015",
     "app_code": "INVALID_PARAMETER",
-    "title": "can not find user by username",
-    "prod": "User can not found CFO-0015",
-    "inter": "User can not found CFO-0015"
-  },
-  "CFO-0016": {
-    "code_id": "CFO-0016",
-    "app_code": "INVALID_PARAMETER",
-    "title": "password wrong",
-    "prod": "password is not match CFO-0016",
-    "inter": "password is not match CFO-0016"
-  },
-  "CFO-0017": {
-    "code_id": "CFO-0017",
-    "app_code": "INVALID_PARAMETER",
-    "title": "username or email exists",
-    "prod": "Username or Email is esxists. Please enter again. CFO-0017",
-    "inter": "Username or Email is esxists. Please enter again. CFO-0017"
+    "title": "username or password is wrong",
+    "prod": "User name or password is wrong. Please login again. CFO-0015",
+    "inter": "User name or password is wrong. Please login again. CFO-0015"
   }
 }

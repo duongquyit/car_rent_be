@@ -41,7 +41,7 @@ export class AuthService {
     }
     const isMatch = decodePassword(createAuthDto.password, user.password);
     if (!isMatch) {
-      throw new BadRequestException('user.CFO-0016');
+      throw new BadRequestException('user.CFO-0015');
     }
 
     return { user_id: user.id };
