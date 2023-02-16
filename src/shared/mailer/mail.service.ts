@@ -1,8 +1,9 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
-import { Queue } from 'bull';
+import { Job, Queue } from 'bull';
 import {
+  mailDLQ,
   mailerQueue,
   orderSuccessJob,
 } from 'src/common/constants/queue.constant';
@@ -13,12 +14,10 @@ export class MailService {
   constructor(
     private readonly mailerService: MailerService,
     @InjectQueue(mailerQueue) private readonly mailQueue: Queue,
+    @InjectQueue(mailDLQ) private readonly mailDLQ: Queue,
   ) {}
 
-  async handleSendMailAfterOrderSuccess(
-    receiverEmail: string,
-    billing: any,
-  ): Promise<void> {
+  async handleSendMail(receiverEmail: string, billing: any): Promise<void> {
     await this.mailerService.sendMail({
       to: receiverEmail,
       from: process.env.MAILER_FROM_USER,
@@ -30,10 +29,11 @@ export class MailService {
     });
   }
 
-  async requestSendMailAfterOrderSuccess(
-    email: string,
-    order: any,
-  ): Promise<void> {
+  async addSendMailJobToQueue(email: string, order: any): Promise<void> {
     await this.mailQueue.add(orderSuccessJob, { email, order });
+  }
+
+  async addJobToDLQ(jobName: string, job: Job) {
+    await this.mailDLQ.add(jobName, job);
   }
 }

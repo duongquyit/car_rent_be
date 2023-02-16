@@ -45,7 +45,7 @@ export class OrdersService {
       rental_info.pick_up_city_id,
       rental_info.drop_off_city_id,
     );
-    await this.checkCarAvaiable(+car_id, rental_info);
+    // await this.checkCarAvaiable(+car_id, rental_info);
 
     const subTotal: number = this.getSubtotal(
       rental_info.pick_up_datetime,
