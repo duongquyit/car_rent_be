@@ -2,6 +2,7 @@ import { DateTimeEntity } from 'src/common/base-entity/date-time.entity';
 import { Car } from 'src/modules/cars/entities/car.entity';
 import { MasterCity } from 'src/modules/master-cities/entities/master_city.entity';
 import { Order } from 'src/modules/orders/entities/order.entity';
+import { Review } from 'src/modules/reviews/entities/review.entity';
 import {
   Column,
   Entity,
@@ -105,6 +106,11 @@ export class OrderDetail extends DateTimeEntity {
   )
   @JoinColumn({ name: 'drop_off_city_id' })
   drop_off_city: MasterCity;
+
+  @OneToOne(() => Review, (review) => review.order_detail, {
+    createForeignKeyConstraints: false,
+  })
+  review: Review;
 }
 
 export const ORDER_DETAIL_SELECT_COLS = [

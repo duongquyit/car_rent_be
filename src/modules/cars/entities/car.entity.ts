@@ -68,11 +68,6 @@ export class Car extends DateTimeEntity {
   })
   car_images: CarImage[];
 
-  @OneToMany(() => Review, (review) => review.car, {
-    createForeignKeyConstraints: false,
-  })
-  reviews: Review[];
-
   @OneToMany(() => OrderDetail, (order_detail) => order_detail.car, {
     createForeignKeyConstraints: false,
   })

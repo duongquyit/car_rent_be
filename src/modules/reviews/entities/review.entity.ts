@@ -1,11 +1,13 @@
 import { DateTimeEntity } from 'src/common/base-entity/date-time.entity';
 import { Car } from 'src/modules/cars/entities/car.entity';
+import { OrderDetail } from 'src/modules/order-details/entities/order-detail.entity';
 import { User } from 'src/modules/users/entities/user.entity';
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -20,7 +22,7 @@ export class Review extends DateTimeEntity {
     nullable: true,
     type: 'int',
   })
-  car_id: number;
+  order_detail_id: number;
 
   @Column({
     nullable: true,
@@ -40,15 +42,15 @@ export class Review extends DateTimeEntity {
   })
   stars: number;
 
-  @ManyToOne(() => Car, (car) => car.reviews, {
-    createForeignKeyConstraints: false,
-  })
-  @JoinColumn({ name: 'car_id' })
-  car: Car;
-
   @ManyToOne(() => User, (user) => user.reviews, {
     createForeignKeyConstraints: false,
   })
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @OneToOne(() => OrderDetail, (orderDetail) => orderDetail.review, {
+    createForeignKeyConstraints: false,
+  })
+  @JoinColumn({ name: 'order_detail_id' })
+  order_detail: OrderDetail;
 }
