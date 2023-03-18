@@ -34,6 +34,7 @@ import {
 import { AppExceptionFilter } from './common/exception-filters/app.exception-filter';
 import { EN, JA } from './common/constants/language.constant';
 import * as redisStore from 'cache-manager-redis-store';
+import { StripeModule } from './shared/stripe/stripe.module';
 
 @Module({
   imports: [
@@ -118,6 +119,7 @@ import * as redisStore from 'cache-manager-redis-store';
     OrdersModule,
     OrderDetailsModule,
     CarFavoritesModule,
+    StripeModule,
   ],
   controllers: [],
   providers: [

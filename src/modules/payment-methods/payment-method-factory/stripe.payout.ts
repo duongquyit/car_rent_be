@@ -3,7 +3,7 @@ import IPayOut from './interfaces/payout.interface';
 export default class StripePayout implements IPayOut {
   amount: number;
 
-  pay(): Boolean {
+  pay(): boolean {
     return true;
   }
 

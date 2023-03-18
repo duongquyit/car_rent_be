@@ -98,7 +98,7 @@ export class OrdersService {
     return car;
   }
 
-  async checkCarAvaiable(carId: number, rentalInfor: any): Promise<Boolean> {
+  async checkCarAvaiable(carId: number, rentalInfor: any): Promise<boolean> {
     const { pick_up_datetime, drop_off_datetime } = rentalInfor;
     this.checkDateTimeValid(pick_up_datetime, drop_off_datetime);
 

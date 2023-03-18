@@ -24,8 +24,9 @@ export class ReviewsService {
     const queryBuilder = this.reviewRepository.createQueryBuilder('reviews');
     queryBuilder
       .leftJoinAndSelect('reviews.user', 'user')
+      .leftJoinAndSelect('reviews.order_detail', 'order_detail')
       .select(REVIEW_SELECT_COLS)
-      .where('reviews.car_id = :car_id', { car_id });
+      .where('order_detail.car_id = :car_id', { car_id });
 
     const panigation = handleGetLimitAndOffset(
       +limit || REVIEW_LIMIT_DEFAULT,
