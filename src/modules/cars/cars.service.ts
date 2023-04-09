@@ -8,7 +8,7 @@ import {
   SELECT_COL_DEFAULT,
 } from './entities/car.entity';
 import { Brackets, Repository } from 'typeorm';
-import { handleGetLimitAndOffset } from 'src/common/helpers/panigation.helper';
+import { handleGetLimitAndOffset } from 'src/common/helpers/pagination.helper';
 import {
   CAR_POPULAR,
   CAR_RECOMENDATION,
@@ -29,7 +29,7 @@ export class CarsService {
   async findAll(query: any, lang: string, user: any) {
     const {
       name,
-      type_id,
+      type,
       capacity,
       max_price,
       pick_up_city_id,
@@ -37,8 +37,8 @@ export class CarsService {
       pick_up_datetime,
       drop_off_datetime,
       order_by,
-      limit,
-      offset,
+      limit = LIMIT_DEFAULT,
+      offset = OFFSET_DEFAULT,
     } = query;
 
     const queryBuilder = this.carDefaultQueryBuilder(this.carRepository, lang);
@@ -54,8 +54,9 @@ export class CarsService {
         name: `%${query.name}%`,
       });
     }
-    if (type_id) {
-      const carTypes = Array.isArray(type_id) ? type_id : [type_id];
+    if (type) {
+      const carTypes = type.split(',');
+      console.log(carTypes);
       queryBuilder.andWhere(
         new Brackets((qb) => {
           carTypes.forEach((id, index) => {
@@ -67,7 +68,7 @@ export class CarsService {
       );
     }
     if (capacity) {
-      const carCapacities = Array.isArray(capacity) ? capacity : [capacity];
+      const carCapacities = capacity.split(',');
       queryBuilder.andWhere(
         new Brackets((qb) => {
           carCapacities.forEach((num, index) => {
@@ -110,9 +111,9 @@ export class CarsService {
           `NOT EXISTS (
             SELECT car_id FROM order_details
             LEFT JOIN orders ON order_details.order_id = orders.id
-            WHERE cars.id = order_details.car_id 
+            WHERE cars.id = order_details.car_id
             AND (
-              order_details.pick_up_datetime BETWEEN :pick_up_datetime AND :drop_off_datetime 
+              order_details.pick_up_datetime BETWEEN :pick_up_datetime AND :drop_off_datetime
               OR order_details.drop_off_datetime BETWEEN :pick_up_datetime AND :drop_off_datetime
             )
             AND orders.status IN (:open, :success, :inprogress)
@@ -133,9 +134,9 @@ export class CarsService {
           `NOT EXISTS (
             SELECT car_id FROM order_details
             LEFT JOIN orders on order_details.order_id = orders.id
-            WHERE cars.id = order_details.car_id 
+            WHERE cars.id = order_details.car_id
             AND (
-              order_details.pick_up_datetime < :datetime 
+              order_details.pick_up_datetime < :datetime
               AND order_details.drop_off_datetime > :datetime
             )
             AND orders.status IN (:open, :success, :inprogress)
@@ -154,10 +155,10 @@ export class CarsService {
         .andWhere(
           `NOT EXISTS (
             SELECT car_id FROM order_details
-            LEFT JOIN orders on order_details.order_id = orders.id 
-            WHERE cars.id = order_details.car_id 
+            LEFT JOIN orders on order_details.order_id = orders.id
+            WHERE cars.id = order_details.car_id
             AND (
-              order_details.pick_up_datetime < :datetime 
+              order_details.pick_up_datetime < :datetime
               AND order_details.drop_off_datetime > :datetime
             )
             AND orders.status IN (:open, :success, :inprogress)
@@ -189,18 +190,14 @@ export class CarsService {
         .addOrderBy('avg_rating', 'DESC');
     }
 
-    const panigation = handleGetLimitAndOffset(
-      limit || LIMIT_DEFAULT,
-      offset || OFFSET_DEFAULT,
-      await queryBuilder.getCount(),
-    );
+    const [data, total] = await queryBuilder
+      .take(limit)
+      .skip(offset)
+      .getManyAndCount();
 
-    const data = await queryBuilder
-      .take(panigation.limit)
-      .skip(panigation.offset)
-      .getMany();
+    const pagination = handleGetLimitAndOffset(limit, offset, total);
 
-    return { data, panigation };
+    return { data, pagination };
   }
 
   async findOne(id: number, lang: string, user: any) {

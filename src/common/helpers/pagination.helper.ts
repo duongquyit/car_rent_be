@@ -1,9 +1,4 @@
-import {
-  LIMIT_DEFAULT,
-  OFFSET_DEFAULT,
-} from 'src/common/constants/cars.constant';
-
-export type PanigationType = {
+export type Pagination = {
   limit: number;
   offset: number;
   total: number;
@@ -12,8 +7,8 @@ export type PanigationType = {
 export const handleGetLimitAndOffset = (
   limitValue: number,
   offsetValue: number,
-  totalValue: number = 0,
-): PanigationType => {
+  totalValue = 0,
+): Pagination => {
   const limit: number = limitValue;
   const offset: number = offsetValue;
   const total: number = totalValue;

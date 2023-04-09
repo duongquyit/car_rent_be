@@ -7,7 +7,7 @@ import {
   REVIEW_OFFSET_DEFAULT,
   REVIEW_SELECT_COLS,
 } from 'src/common/constants/reviews.constant';
-import { handleGetLimitAndOffset } from 'src/common/helpers/panigation.helper';
+import { handleGetLimitAndOffset } from 'src/common/helpers/pagination.helper';
 import { CreateReviewDTO } from './dto/create-review.dto';
 import { OrderDetail } from '../order-details/entities/order-detail.entity';
 

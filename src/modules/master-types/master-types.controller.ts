@@ -1,8 +1,10 @@
-import { Controller, Get, Headers } from '@nestjs/common';
+import { Controller, Get, Headers, Query } from '@nestjs/common';
 import { MasterTypesService } from './master-types.service';
-import { ApiHeader, ApiTags } from '@nestjs/swagger';
-import { I18n, I18nContext, I18nService } from 'nestjs-i18n';
+import { ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { I18nService } from 'nestjs-i18n';
 import { EN } from 'src/common/constants/language.constant';
+import { Request } from 'express';
+import { PaginateDTO } from 'src/shared/pagination/pagination.dto';
 
 @Controller('master-types')
 @ApiTags('Master Types')
@@ -13,17 +15,24 @@ export class MasterTypesController {
   ) {}
 
   @Get()
+  @ApiQuery({ type: PaginateDTO })
   @ApiHeader({ name: 'accept-language', required: false })
   async findAll(
-    @I18n() i18n: I18nContext,
     @Headers('accept-language') lang: string,
+    @Query() query: Request,
   ) {
-    const types = await this.masterTypesService.findAll(
+    const { types, pagination } = await this.masterTypesService.findAll(
       this.i18nService.resolveLanguage(lang || EN),
+      query,
     );
 
     return {
-      items: types.map((item) => item.master_type_translation),
+      items: types.map((item) => ({
+        id: item.id,
+        name: item.master_type_translation.name,
+        amount: item.amount,
+      })),
+      pagination,
     };
   }
 }

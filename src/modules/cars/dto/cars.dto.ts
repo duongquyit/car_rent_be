@@ -1,6 +1,6 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 import { CarDto } from './car.dto';
-import { PanigationType } from 'src/common/helpers/panigation.helper';
+import { Pagination } from 'src/common/helpers/pagination.helper';
 
 @Exclude()
 export class CarsDto {
@@ -9,5 +9,5 @@ export class CarsDto {
   items: CarDto[];
 
   @Expose()
-  panigation: PanigationType;
+  pagination: Pagination;
 }

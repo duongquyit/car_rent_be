@@ -37,7 +37,7 @@ export class CarsController {
     @Req() req: Request,
     @Headers('accept-language') lang: string,
   ) {
-    const { data, panigation } = await this.carsService.findAll(
+    const { data, pagination } = await this.carsService.findAll(
       query,
       this.i18nService.resolveLanguage(lang || EN),
       req.user,
@@ -47,7 +47,7 @@ export class CarsController {
       items: data.map((item) => {
         return formatCarResponseHelper(item);
       }),
-      panigation,
+      pagination,
     };
   }
 
