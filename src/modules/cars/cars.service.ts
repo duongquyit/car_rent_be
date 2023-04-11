@@ -56,7 +56,6 @@ export class CarsService {
     }
     if (type) {
       const carTypes = type.split(',');
-      console.log(carTypes);
       queryBuilder.andWhere(
         new Brackets((qb) => {
           carTypes.forEach((id, index) => {
@@ -174,6 +173,7 @@ export class CarsService {
     }
 
     if (order_by === CAR_POPULAR) {
+      // Get cars by order amount
       queryBuilder
         .addSelect('COUNT(cars.id)', 'cnt_car_id')
         .addGroupBy(
@@ -181,9 +181,10 @@ export class CarsService {
         )
         .addOrderBy('cnt_car_id', 'DESC');
     } else if (order_by === CAR_RECOMENDATION) {
+      // Get cars by average reviews
       queryBuilder
-        .leftJoin('cars.reviews', 'reviews')
-        .addSelect('AVG(reviews.stars)', 'avg_rating')
+        .leftJoin('order_details.review', 'review')
+        .addSelect('AVG(review.stars)', 'avg_rating')
         .addGroupBy(
           'cars.id, car_translation.id, car_types.id, master_type_translation.id',
         )

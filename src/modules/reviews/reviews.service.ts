@@ -7,7 +7,6 @@ import {
   REVIEW_OFFSET_DEFAULT,
   REVIEW_SELECT_COLS,
 } from 'src/common/constants/reviews.constant';
-import { handleGetLimitAndOffset } from 'src/common/helpers/pagination.helper';
 import { CreateReviewDTO } from './dto/create-review.dto';
 import { OrderDetail } from '../order-details/entities/order-detail.entity';
 
@@ -20,25 +19,26 @@ export class ReviewsService {
   ) {}
 
   async findAll(query: any) {
-    const { car_id, limit, offset } = query;
+    const {
+      car_id,
+      limit = REVIEW_LIMIT_DEFAULT,
+      offset = REVIEW_OFFSET_DEFAULT,
+    } = query;
+
     const queryBuilder = this.reviewRepository.createQueryBuilder('reviews');
     queryBuilder
       .leftJoinAndSelect('reviews.user', 'user')
       .leftJoinAndSelect('reviews.order_detail', 'order_detail')
       .select(REVIEW_SELECT_COLS)
-      .where('order_detail.car_id = :car_id', { car_id });
+      .where('order_detail.car_id = :car_id', { car_id })
+      .take(limit)
+      .skip(offset);
 
-    const panigation = handleGetLimitAndOffset(
-      +limit || REVIEW_LIMIT_DEFAULT,
-      +offset || REVIEW_OFFSET_DEFAULT,
-      await queryBuilder.getCount(),
-    );
+    console.log(limit, offset);
 
-    queryBuilder
-      .take(panigation.limit)
-      .skip(panigation.offset * panigation.limit);
+    const [items, total] = await queryBuilder.getManyAndCount();
 
-    return { items: await queryBuilder.getMany(), panigation };
+    return { items, pagination: { limit, offset, total } };
   }
 
   async createReview(auth: any, reviewData: CreateReviewDTO): Promise<Review> {

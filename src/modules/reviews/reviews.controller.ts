@@ -22,6 +22,7 @@ export class ReviewsController {
 
   @Get()
   getReviewsByCarId(@Query() query: ReviewRequestParamsDto) {
+    console.log({ query });
     return this.reviewsService.findAll(query);
   }
 
