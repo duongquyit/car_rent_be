@@ -9,8 +9,18 @@ export class MasterCitiesService {
     @InjectRepository(MasterCity) private masterCity: Repository<MasterCity>,
   ) {}
 
-  async findAll() {
-    const cities = await this.masterCity.find({});
+  async findAll(query: any) {
+    const { car_id } = query;
+    const queryBuilder = this.masterCity
+      .createQueryBuilder('master_cities')
+      .leftJoin('master_cities.car_locations', 'car_locations');
+
+    if (car_id) {
+      queryBuilder.where('car_locations.car_id = :car_id', { car_id });
+    }
+
+    const cities = await queryBuilder.getMany();
+
     return cities;
   }
 }

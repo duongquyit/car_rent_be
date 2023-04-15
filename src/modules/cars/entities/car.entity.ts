@@ -5,7 +5,6 @@ import { CarLocation } from 'src/modules/car-locations/entities/car-location.ent
 import { CarTranslation } from 'src/modules/car-translations/entities/car-translation.entity';
 import { CarType } from 'src/modules/car-types/entities/car-type.entity';
 import { OrderDetail } from 'src/modules/order-details/entities/order-detail.entity';
-import { Review } from 'src/modules/reviews/entities/review.entity';
 import {
   Column,
   Entity,

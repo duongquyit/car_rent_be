@@ -5,6 +5,10 @@ import { Repository } from 'typeorm';
 import { CarFavorite } from './entities/car-favorite.entity';
 import { Car, SELECT_CAR_FAVORITES_COL } from '../cars/entities/car.entity';
 import { CarBaseQuery } from 'src/common/base-query/car';
+import {
+  LIMIT_DEFAULT,
+  OFFSET_DEFAULT,
+} from 'src/common/constants/cars.constant';
 
 @Injectable()
 export class CarFavoritesService {
@@ -40,7 +44,8 @@ export class CarFavoritesService {
     return await this.carFavoriteRepository.softRemove(favorites);
   }
 
-  async getAll(user: any, lang: string) {
+  async getAll(user: any, query: any, lang: string) {
+    const { limit = LIMIT_DEFAULT, offset = OFFSET_DEFAULT } = query;
     const carBaseQuery = new CarBaseQuery();
     const queryBuilder = carBaseQuery.carInformation(
       this.carCarRepository,
@@ -51,8 +56,19 @@ export class CarFavoritesService {
       .innerJoinAndSelect('favorites.user', 'user', 'user.id = :user_id', {
         user_id: user.user_id,
       })
-      .addSelect(SELECT_CAR_FAVORITES_COL);
+      .addSelect(SELECT_CAR_FAVORITES_COL)
+      .limit(limit)
+      .offset(offset);
 
-    return await queryBuilder.getMany();
+    const [favorites, total] = await queryBuilder.getManyAndCount();
+
+    return {
+      favorites,
+      pagination: {
+        limit,
+        offset,
+        total,
+      },
+    };
   }
 }

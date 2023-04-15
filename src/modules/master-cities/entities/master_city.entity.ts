@@ -24,7 +24,7 @@ export class MasterCity extends DateTimeEntity {
   })
   name: string;
 
-  @OneToMany(() => CarLocation, (car_location) => car_location.city_id)
+  @OneToMany(() => CarLocation, (car_location) => car_location.city)
   car_locations: CarLocation[];
 
   @OneToOne(() => OrderDetail, (order_detail) => order_detail.pick_up_city, {

@@ -3,6 +3,8 @@ export default interface IPayOut {
 
   setAmount(amount: number): void;
   getAmount(): number;
+  getPayoutInformation(): any;
+  setPayoutInformation(payoutInfor: any): void;
 
-  pay(): Boolean;
+  pay(): boolean;
 }

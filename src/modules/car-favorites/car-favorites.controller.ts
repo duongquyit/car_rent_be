@@ -8,6 +8,7 @@ import {
   UseGuards,
   Req,
   Headers,
+  Query,
 } from '@nestjs/common';
 import { CarFavoritesService } from './car-favorites.service';
 import { CreateCarFavoriteDto } from './dto/create-car-favorite.dto';
@@ -52,16 +53,19 @@ export class CarFavoritesController {
   async getAll(
     @Req() req: Request,
     @Headers('accept-language') lang: string,
+    @Query() query: Request,
   ): Promise<any> {
-    const cars = await this.carFavoritesService.getAll(
+    const { favorites, pagination } = await this.carFavoritesService.getAll(
       req.user,
+      query,
       this.i18nService.resolveLanguage(lang) || EN,
     );
 
     return {
-      items: cars.map((item) => {
+      items: favorites.map((item) => {
         return formatCarResponseHelper(item);
       }),
+      pagination,
     };
   }
 }

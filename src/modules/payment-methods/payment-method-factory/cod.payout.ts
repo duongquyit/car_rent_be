@@ -3,6 +3,7 @@ import IPayOut from './interfaces/payout.interface';
 export default class CODPayout implements IPayOut {
   amount: number;
   errorMessage: string;
+  payoutInfor: any;
 
   pay(): boolean {
     return true;
@@ -14,5 +15,13 @@ export default class CODPayout implements IPayOut {
 
   getAmount(): number {
     return this.amount;
+  }
+
+  setPayoutInformation(_payoutInfor: any): void {
+    this.payoutInfor = _payoutInfor;
+  }
+
+  getPayoutInformation(): any {
+    return this.payoutInfor;
   }
 }

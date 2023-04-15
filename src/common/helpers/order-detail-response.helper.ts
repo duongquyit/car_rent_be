@@ -35,5 +35,6 @@ export const handleResponseOrderItem = (order) => {
     })),
     pick_up_city: order.pick_up_city.name,
     drop_off_city: order.drop_off_city.name,
+    review: order.review,
   };
 };

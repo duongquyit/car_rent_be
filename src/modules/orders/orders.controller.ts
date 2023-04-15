@@ -13,7 +13,7 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { ApiBearerAuth, ApiHeader, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { Request } from 'express';
-import { I18n, I18nContext, I18nService } from 'nestjs-i18n';
+import { I18nService } from 'nestjs-i18n';
 import {
   formatOrderResponse,
   handleResponseOrders,
@@ -43,7 +43,7 @@ export class OrdersController {
     const user: User = await this.usersService.findOne(order.user_id);
     await this.mailService.addSendMailJobToQueue(user.email, order);
 
-    return order;
+    return { id: order.id };
   }
 
   @Get(':id')

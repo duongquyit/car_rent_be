@@ -34,24 +34,27 @@ export class OrdersService {
   ) {}
 
   async create(createOrderDto: CreateOrderDto, user: any): Promise<Order> {
-    const { billing_info, payment_method, rental_info, car_id } =
+    const { billing_info, payment_method, rental_info, car_id, total } =
       createOrderDto;
 
     const user_id: number = user.user_id;
 
     const car: Car = await this.checkCarExists(+car_id);
-    await this.checkCarLocationInvalid(
-      +car.id,
-      rental_info.pick_up_city_id,
-      rental_info.drop_off_city_id,
-    );
+    // await this.checkCarLocationInvalid(
+    //   +car.id,
+    //   rental_info.pick_up_city_id,
+    //   rental_info.drop_off_city_id,
+    // );
     // await this.checkCarAvaiable(+car_id, rental_info);
+
+    const payOut: IPayOut = await this.genetatePayout(payment_method);
 
     const subTotal: number = this.getSubtotal(
       rental_info.pick_up_datetime,
       rental_info.drop_off_datetime,
       DEFAULT_QUANTITY,
       car.price,
+      payOut,
     );
 
     const newOrder: Order = await this.orderRepository.save({
@@ -68,7 +71,6 @@ export class OrdersService {
       order_id: newOrder.id,
     });
 
-    const payOut: IPayOut = await this.genetatePayout(payment_method);
     payOut.setAmount(subTotal);
     const payoutStatus: string = payOut.pay() ? SUCCESS_STATUS : FAILED_STATUS;
 
@@ -224,6 +226,7 @@ export class OrdersService {
       throw new BadRequestException('order.FEC-0041');
     }
     const payOut: IPayOut = PayoutFactory.generatePayout(method.name);
+    payOut.setPayoutInformation(method);
 
     return payOut;
   }
@@ -233,20 +236,35 @@ export class OrdersService {
     drop_off_datetime: string,
     quantity: number,
     price: number,
+    payOut: IPayOut,
   ): number {
     const start: number = new Date(pick_up_datetime).getTime();
     const end: number = new Date(drop_off_datetime).getTime();
     const days: number = Math.ceil((end - start) / A_DAY_IN_MILLISECONDS);
+    let totalCost: number = price * days;
 
-    return days * price * quantity;
+    const payOutInfor = payOut.getPayoutInformation().informations;
+    switch (payOutInfor.type) {
+      case 'dorla': {
+        totalCost += payOutInfor.tax;
+        break;
+      }
+      case 'percent': {
+        totalCost += (payOutInfor.fee * price) / 100;
+        break;
+      }
+    }
+
+    return totalCost;
   }
 
   async getOrderDetail(id: number, lang: string): Promise<any> {
-    const queryBuilder = this.orderBuilderCommon(
-      this.orderRepository,
-      lang,
-    ).where('orders.id = :id', { id });
+    const queryBuilder = this.orderBuilderCommon(this.orderRepository, lang)
+      .leftJoinAndSelect('order_details.review', 'review')
+      .where('orders.id = :id', { id });
+
     const order = await queryBuilder.getOne();
+
     if (!order) {
       throw new BadRequestException('order.FEC-0050');
     }

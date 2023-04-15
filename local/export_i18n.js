@@ -138,7 +138,6 @@ function transformErrMsg(sheet, row, index) {
       !errJaMsgInter:
       return [];
     case !fileName:
-      console.log(fileName);
       throw error(COL_ERR_MSG_FILE_NAME);
     case !errorKey:
       throw error(COL_APP_CODE);
