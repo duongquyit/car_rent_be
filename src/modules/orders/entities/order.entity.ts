@@ -1,6 +1,7 @@
 import { DateTimeEntity } from 'src/common/base-entity/date-time.entity';
 import { OrderDetail } from 'src/modules/order-details/entities/order-detail.entity';
 import { PaymentMethod } from 'src/modules/payment-methods/entities/payment-method.entity';
+import { Transaction } from 'src/shared/stripe/entities/transaction.entity';
 import { User } from 'src/modules/users/entities/user.entity';
 import {
   Column,
@@ -109,6 +110,11 @@ export class Order extends DateTimeEntity {
     createForeignKeyConstraints: false,
   })
   order_order_details: OrderDetail[];
+
+  @OneToMany(() => Transaction, (transaction) => transaction.order_id, {
+    createForeignKeyConstraints: false,
+  })
+  order_transactions: Transaction[];
 
   @ManyToOne(() => User, (user) => user.orders, {
     createForeignKeyConstraints: false,

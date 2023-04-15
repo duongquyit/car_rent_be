@@ -25,10 +25,13 @@ export default class ChargeController {
   }
 
   @Post('/webhook')
-  handleWebhook(
+  async handleWebhook(
     @Headers('stripe-signature') signature: string,
     @Req() req: RawBodyRequest<Request>,
   ) {
-    this.stripService.handleWebhook(req.rawBody, signature);
+    await this.stripService.handleWebhook(
+      { rawBody: req.rawBody, payload: req.body },
+      signature,
+    );
   }
 }
