@@ -1,72 +1,9 @@
 {
-  "CUS-0403": {
-    "code_id": "CUS-0403",
-    "app_code": "UNAUTHORIZED_ACCESS",
-    "title": "User not authenticated",
-    "prod": "User authentication is not done. You need to log in again. CUS-0403",
-    "inter": "User authentication is not done. You need to log in again. CUS-0403"
-  },
-  "CUS-0405": {
-    "code_id": "CUS-0405",
-    "app_code": "UNAUTHORIZED_ACCESS",
-    "title": "User authentication expired",
-    "prod": "The expiration date of user authentication has expired.Please start over again from the beginning. CUS-0405",
-    "inter": "The expiration date of user authentication has expired.Please start over again from the beginning. CUS-0405"
-  },
-  "CFO-0003": {
-    "code_id": "CFO-0003",
+  "": {
+    "code_id": "",
     "app_code": "INVALID_PARAMETER",
-    "title": "There are required items",
-    "prod": "This field is required. Please enter. CFO-0003",
-    "inter": "This field is required. Please enter. CFO-0003"
-  },
-  "CFO-0004": {
-    "code_id": "CFO-0004",
-    "app_code": "INVALID_PARAMETER",
-    "title": "Wrong number of digits",
-    "prod": "For this item, enter the X -digit number. CFO-0004",
-    "inter": "For this item, enter the X -digit number. CFO-0004"
-  },
-  "CFO-0005": {
-    "code_id": "CFO-0005",
-    "app_code": "INVALID_PARAMETER",
-    "title": "There are required items",
-    "prod": "Please select one from the displayed item. CFO-0005",
-    "inter": "Please select one from the displayed item. CFO-0005"
-  },
-  "CFO-0006": {
-    "code_id": "CFO-0006",
-    "app_code": "INVALID_PARAMETER",
-    "title": "Input value not exist",
-    "prod": "Input value not exist CFO-0006",
-    "inter": "The input value doesn't exist in the database. CFO-0006"
-  },
-  "CFO-0007": {
-    "code_id": "CFO-0007",
-    "app_code": "INVALID_PARAMETER",
-    "title": "Duplicate group name",
-    "prod": "The same group name already exists. Please enter a different group name. CFO-0007",
-    "inter": "The same group name already exists. Please enter a different group name. CFO-0007"
-  },
-  "CFO-0008": {
-    "code_id": "CFO-0008",
-    "app_code": "INVALID_PARAMETER",
-    "title": "Duplicate field",
-    "prod": "{field} is exists. CFO-0008",
-    "inter": "{field} is exists. CFO-0008"
-  },
-  "CFO-0010": {
-    "code_id": "CFO-0010",
-    "app_code": "INVALID_PARAMETER",
-    "title": "Value must email",
-    "prod": "Value must be an email. CFO-0010",
-    "inter": "Value must be an email. CFO-0010"
-  },
-  "CFO-0015": {
-    "code_id": "CFO-0015",
-    "app_code": "INVALID_PARAMETER",
-    "title": "username or password is wrong",
-    "prod": "User name or password is wrong. Please login again. CFO-0015",
-    "inter": "User name or password is wrong. Please login again. CFO-0015"
+    "title": "username or email exists",
+    "prod": "Username or Email is esxists. Please enter again. ",
+    "inter": "Username or Email is esxists. Please enter again. "
   }
 }

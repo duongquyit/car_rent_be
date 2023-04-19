@@ -1,0 +1,9 @@
+{
+  "": {
+    "code_id": "",
+    "app_code": "BAD_REQUEST",
+    "title": "Review already exists",
+    "prod": "Your review is exists. You can not review again, please create new order to review. ",
+    "inter": "Your review is exists. You can not review again, please create new order to review. "
+  }
+}

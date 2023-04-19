@@ -41,4 +41,4 @@ lerna-debug.log*
 ./database/config.migration.ts
 
 # Error Message
-/[Template] Error message (local_server) & Localization.xlsx
+*.xlsx

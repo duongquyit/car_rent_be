@@ -1,44 +1,9 @@
 {
-  "FEC-009": {
-    "code_id": "FEC-009",
-    "app_code": "BAD_REQUEST",
-    "title": "System error",
-    "prod": "App is unauthenticated. FEC-009",
-    "inter": "App is unauthenticated. FEC-009"
-  },
-  "FEC-0011": {
-    "code_id": "FEC-0011",
-    "app_code": "BAD_REQUEST",
-    "title": "Order not completed",
-    "prod": "The order could not be completed because there was no operation for a long time. Please order again. FEC-0011",
-    "inter": "The order could not be completed because there was no operation for a long time. Please order again. FEC-0011"
-  },
-  "FEC-0042": {
-    "code_id": "FEC-0042",
-    "app_code": "BAD_REQUEST",
-    "title": "Date time less than now",
-    "prod": "Date time can not less than right now FEC-0042",
-    "inter": "Date time can not less than right now FEC-0042"
-  },
-  "FEC-0043": {
-    "code_id": "FEC-0043",
-    "app_code": "BAD_REQUEST",
-    "title": "Date invalid",
-    "prod": "Start datetime or end datetime must be invalid FEC-0043",
-    "inter": "Start datetime or end datetime must be invalid FEC-0043"
-  },
-  "FEC-0044": {
-    "code_id": "FEC-0044",
+  "": {
+    "code_id": "",
     "app_code": "BAD_REQUEST",
     "title": "Car is not avaible.",
-    "prod": "Car is not avaible. FEC-0044",
-    "inter": "Car is not avaible. FEC-0044"
-  },
-  "FEC-0045": {
-    "code_id": "FEC-0045",
-    "app_code": "BAD_REQUEST",
-    "title": "Car is not avaible.",
-    "prod": "Car is not exists. FEC-0045",
-    "inter": "Car is not exists. FEC-0045"
+    "prod": "The car you choosed maybe not exists. Please choose another ",
+    "inter": "The car you choosed maybe not exists. Please choose another "
   }
 }
