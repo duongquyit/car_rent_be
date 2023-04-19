@@ -1,11 +1,12 @@
+import { INPROGRESS_STATUS } from 'src/common/constants/order.constant';
 import IPayOut from './interfaces/payout.interface';
 
 export default class StripePayout implements IPayOut {
   amount: number;
   payoutInfor: any;
 
-  pay(): boolean {
-    return true;
+  pay(): string {
+    return INPROGRESS_STATUS;
   }
 
   getAmount(): number {

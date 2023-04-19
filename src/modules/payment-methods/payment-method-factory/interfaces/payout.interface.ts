@@ -6,5 +6,5 @@ export default interface IPayOut {
   getPayoutInformation(): any;
   setPayoutInformation(payoutInfor: any): void;
 
-  pay(): boolean;
+  pay(): string | boolean;
 }

@@ -19,6 +19,7 @@ import PayoutFactory from '../payment-methods/payment-method-factory/payout-fact
 import IPayOut from '../payment-methods/payment-method-factory/interfaces/payout.interface';
 import { MasterCity } from '../master-cities/entities/master_city.entity';
 import { DROP_OFF, PICK_UP } from 'src/common/constants/car-locations';
+import { BadRequestError } from 'src/common/exception-filters/errors-define';
 
 @Injectable()
 export class OrdersService {
@@ -39,13 +40,19 @@ export class OrdersService {
 
     const user_id: number = user.user_id;
 
-    const car: Car = await this.checkCarExists(+car_id);
-    // await this.checkCarLocationInvalid(
-    //   +car.id,
-    //   rental_info.pick_up_city_id,
-    //   rental_info.drop_off_city_id,
-    // );
-    // await this.checkCarAvaiable(+car_id, rental_info);
+    const [car] = await Promise.all([
+      this.checkCarExists(+car_id),
+      this.checkCarAvaiable(+car_id, rental_info),
+      this.checkCarLocationInvalid(
+        +car_id,
+        rental_info.pick_up_city_id,
+        rental_info.drop_off_city_id,
+      ),
+      this.checkDateTimeValid(
+        rental_info.pick_up_datetime,
+        rental_info.drop_off_datetime,
+      ),
+    ]);
 
     const payOut: IPayOut = await this.genetatePayout(payment_method);
 
@@ -56,6 +63,8 @@ export class OrdersService {
       car.price,
       payOut,
     );
+
+    this.validateTotalCostWithCurrentCost(total, subTotal);
 
     const newOrder: Order = await this.orderRepository.save({
       user_id,
@@ -72,7 +81,7 @@ export class OrdersService {
     });
 
     payOut.setAmount(subTotal);
-    const payoutStatus: string = payOut.pay() ? SUCCESS_STATUS : FAILED_STATUS;
+    const payoutStatus: any = payOut.pay();
 
     const orderResult: Order = await this.orderRepository.save({
       ...newOrder,
@@ -102,7 +111,6 @@ export class OrdersService {
 
   async checkCarAvaiable(carId: number, rentalInfor: any): Promise<boolean> {
     const { pick_up_datetime, drop_off_datetime } = rentalInfor;
-    this.checkDateTimeValid(pick_up_datetime, drop_off_datetime);
 
     const queryBuilder = this.orderDetailRepository
       .createQueryBuilder('order_details')
@@ -229,6 +237,12 @@ export class OrdersService {
     payOut.setPayoutInformation(method);
 
     return payOut;
+  }
+
+  validateTotalCostWithCurrentCost(total: number, currentCost: number): void {
+    if (total !== currentCost) {
+      throw new BadRequestError('order.FEC-0053');
+    }
   }
 
   getSubtotal(

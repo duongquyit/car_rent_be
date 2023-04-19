@@ -14,4 +14,8 @@ export default class CreateSessionDto {
   @ApiProperty()
   @IsNumber()
   quantity: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  metadata: any;
 }

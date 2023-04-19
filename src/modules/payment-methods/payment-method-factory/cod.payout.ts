@@ -1,3 +1,4 @@
+import { SUCCESS_STATUS } from 'src/common/constants/order.constant';
 import IPayOut from './interfaces/payout.interface';
 
 export default class CODPayout implements IPayOut {
@@ -5,8 +6,8 @@ export default class CODPayout implements IPayOut {
   errorMessage: string;
   payoutInfor: any;
 
-  pay(): boolean {
-    return true;
+  pay(): string {
+    return SUCCESS_STATUS;
   }
 
   setAmount(_amount: number): void {
