@@ -1,9 +1,128 @@
 {
-  "": {
-    "code_id": "",
+  "FEC-0001": {
+    "code_id": "FEC-0001",
+    "app_code": "BAD_REQUEST",
+    "title": "I'm sorry",
+    "prod": "Some items are out of stock FEC-0001",
+    "inter": "disabled: Product disabledout_of_stock: Some items are out of stocknot_found: product not found FEC-0001"
+  },
+  "FEC-0002": {
+    "code_id": "FEC-0002",
+    "app_code": "BAD_REQUEST",
+    "title": "I'm sorry",
+    "prod": "All of the items are out of stock FEC-0002",
+    "inter": "All of the items are out of stock FEC-0002"
+  },
+  "FEC-0003": {
+    "code_id": "FEC-0003",
+    "app_code": "BAD_REQUEST",
+    "title": "Failed to settle with credit card.",
+    "prod": "The selected credit card could not be purchased.Please enter your card information again or select another payment method. FEC-0003",
+    "inter": "The selected credit card could not be purchased.Please enter your card information again or select another payment method. FEC-0003"
+  },
+  "FEC-0004": {
+    "code_id": "FEC-0004",
+    "app_code": "BAD_REQUEST",
+    "title": "Insufficient stock",
+    "prod": "Some items could not be stocked for the number of purchasesCheck your cart FEC-0004",
+    "inter": "Some items could not be stocked for the number of purchasesCheck your cart FEC-0004"
+  },
+  "FEC-0006": {
+    "code_id": "FEC-0006",
+    "app_code": "BAD_REQUEST",
+    "title": "Sale has ended",
+    "prod": "Sorry, the sale has been ended, you can not purchase these items. FEC-0006",
+    "inter": "Sorry, the sale has been ended, you can not purchase these items. FEC-0006"
+  },
+  "FEC-0007": {
+    "code_id": "FEC-0007",
+    "app_code": "BAD_REQUEST",
+    "title": "Payment error",
+    "prod": "We are no longer support this payment method, please choose another one. FEC-0007",
+    "inter": "We are no longer support this payment method, please choose another one. FEC-0007"
+  },
+  "FEC-0008": {
+    "code_id": "FEC-0008",
+    "app_code": "BAD_REQUEST",
+    "title": "Delivery error",
+    "prod": "We are no longer support this delivery method, please choose another one. FEC-0008",
+    "inter": "We are no longer support this delivery method, please choose another one. FEC-0008"
+  },
+  "FEC-0009": {
+    "code_id": "FEC-0009",
+    "app_code": "BAD_REQUEST",
+    "title": "Service has ended",
+    "prod": "Service is no longer available today. FEC-0009",
+    "inter": "Service is no longer available today. FEC-0009"
+  },
+  "FEC-0027": {
+    "code_id": "FEC-0027",
+    "app_code": "BAD_REQUEST",
+    "title": "Change product information",
+    "prod": "There is a change in the items in the cart. please confirm. FEC-0027",
+    "inter": "There is a change in the items in the cart. please confirm. FEC-0027"
+  },
+  "FEC-0040": {
+    "code_id": "FEC-0040",
+    "app_code": "BAD_REQUEST",
+    "title": "In Preview (Not available for purchase)",
+    "prod": "You cannot proceed purchasing during the preview mode FEC-0040",
+    "inter": "You cannot proceed purchasing during the preview mode FEC-0040"
+  },
+  "FEC-0041": {
+    "code_id": "FEC-0041",
+    "app_code": "BAD_REQUEST",
+    "title": "Payment method invalid",
+    "prod": "Payment method invalid FEC-0041",
+    "inter": "Payment method invalid FEC-0041"
+  },
+  "FEC-0046": {
+    "code_id": "FEC-0046",
+    "app_code": "BAD_REQUEST",
+    "title": "Payment failed",
+    "prod": "Payment failed FEC-0046",
+    "inter": "Payment failed FEC-0046"
+  },
+  "FEC-0047": {
+    "code_id": "FEC-0047",
+    "app_code": "BAD_REQUEST",
+    "title": "Date time invalid.",
+    "prod": "Date time is invalid. FEC-0047",
+    "inter": "Date time is invalid. FEC-0047"
+  },
+  "FEC-0048": {
+    "code_id": "FEC-0048",
+    "app_code": "BAD_REQUEST",
+    "title": "car location invalid",
+    "prod": "Car location you choose is not exists or It not invalid now.  FEC-0048",
+    "inter": "Car location you choose is not exists or It not invalid now. FEC-0048"
+  },
+  "FEC-0049": {
+    "code_id": "FEC-0049",
+    "app_code": "BAD_REQUEST",
+    "title": "car location invalid",
+    "prod": "Car not not allow in  FEC-0049",
+    "inter": "Car location is not exists FEC-0049"
+  },
+  "FEC-0050": {
+    "code_id": "FEC-0050",
+    "app_code": "BAD_REQUEST",
+    "title": "order not exists",
+    "prod": "Order can not found FEC-0050",
+    "inter": "Order can not found FEC-0050"
+  },
+  "FEC-0051": {
+    "code_id": "FEC-0051",
+    "app_code": "BAD_REQUEST",
+    "title": "Order detail is not exists",
+    "prod": "Order detail can not found. Please check your order detail, it may be not exists. FEC-0051",
+    "inter": "Order detail can not found. Please check your order detail, it may be not exists. FEC-0051"
+  },
+  "FEC-0053": {
+    "code_id": "FEC-0053",
     "app_code": "BAD_REQUEST",
     "title": "Price of product is chaged or another of total cost is changed make your total cost wrong. Please go to order again. ",
-    "prod": "Price of product is chaged or another of total cost is changed make your total cost wrong. Please go to order again.  ",
-    "inter": "Price of product is chaged or another of total cost is changed make your total cost wrong. Please go to order again.  "
+    "prod": "Price of product is chaged or another of total cost is changed make your total cost wrong. Please go to order again.  FEC-0053",
+    "inter": "Price of product is chaged or another of total cost is changed make your total cost wrong. Please go to order again.  FEC-0053"
   }
 }
