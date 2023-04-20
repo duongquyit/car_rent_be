@@ -9,7 +9,6 @@ import { PaymentMethodDto } from './dto/payment-method-info.dto';
 import { PaymentMethod } from '../payment-methods/entities/payment-method.entity';
 import {
   DEFAULT_QUANTITY,
-  FAILED_STATUS,
   A_DAY_IN_MILLISECONDS,
   OPEN_STATUS,
   SUCCESS_STATUS,

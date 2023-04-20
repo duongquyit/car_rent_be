@@ -5,6 +5,9 @@ export class MasterCityQueryParamsDto {
   car_id: number;
 
   @ApiProperty({ required: false })
+  action_type: string;
+
+  @ApiProperty({ required: false })
   limit: number;
 
   @ApiProperty({ required: false })
