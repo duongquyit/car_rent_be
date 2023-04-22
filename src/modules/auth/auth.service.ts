@@ -44,7 +44,7 @@ export class AuthService {
       throw new BadRequestException('user.CFO-0015');
     }
 
-    return { user_id: user.id };
+    return { user_id: user.id, role: user.position };
   }
 
   async signin(payload: any) {
