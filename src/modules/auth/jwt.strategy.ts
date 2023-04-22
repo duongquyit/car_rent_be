@@ -17,6 +17,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const user = {
       user_id: payload.user_id,
       refresh_token_id: payload.refresh_token_id,
+      role: payload.role,
     };
     const isLogout = await this.authService.userIsLogout(user);
     if (isLogout) {
