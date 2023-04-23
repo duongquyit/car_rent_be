@@ -8,6 +8,7 @@ import {
   PICK_UP,
 } from 'src/common/constants/car-locations';
 import { formatCarLocationResponseHelper } from 'src/common/helpers/format-car-location-response.helper';
+import { CreateCarLocationDto } from './dto/create-car-location.dto';
 
 @Injectable()
 export class CarLocationsService {
@@ -45,5 +46,23 @@ export class CarLocationsService {
         drop_off_locations: formatCarLocationResponseHelper(dropOffLocations),
       },
     };
+  }
+
+  createCarLocations(car_id: number, data: CreateCarLocationDto[]) {
+    return this.carLocationRepository
+      .createQueryBuilder()
+      .insert()
+      .into(CarLocation)
+      .values(
+        data.map((item) => ({
+          car_id,
+          ...item,
+        })),
+      )
+      .execute();
+  }
+
+  async updateCarLocations(car_id: number, data: CreateCarLocationDto) {
+    await this.carLocationRepository.save({ car_id, ...data });
   }
 }

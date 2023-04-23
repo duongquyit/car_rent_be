@@ -21,10 +21,24 @@ import {
   OPEN_STATUS,
   SUCCESS_STATUS,
 } from 'src/common/constants/order.constant';
+import { CreateCarDto } from './dto/create-car.dto';
+import { CarTranslation } from '../car-translations/entities/car-translation.entity';
+import { CarType } from '../car-types/entities/car-type.entity';
+import { CarImage } from '../car-images/entities/car-image.entity';
+import { CarLocation } from '../car-locations/entities/car-location.entity';
 
 @Injectable()
 export class CarsService {
-  constructor(@InjectRepository(Car) private carRepository: Repository<Car>) {}
+  constructor(
+    @InjectRepository(Car) private carRepository: Repository<Car>,
+    @InjectRepository(CarTranslation)
+    private carTranslationRepository: Repository<CarTranslation>,
+    @InjectRepository(CarType) private carTypeRepository: Repository<CarType>,
+    @InjectRepository(CarImage)
+    private carImageRepository: Repository<CarImage>,
+    @InjectRepository(CarLocation)
+    private carLocationRespository: Repository<CarLocation>,
+  ) {}
 
   async findAll(query: any, lang: string, user: any) {
     const {
@@ -239,4 +253,36 @@ export class CarsService {
 
     return queryBuilder;
   };
+
+  async createCar(data: CreateCarDto): Promise<Car> {
+    const car: Car = await this.carRepository.save({
+      capacity: data.capacity,
+      gasoline: data.gasoline,
+      price: data.price,
+      base_price: data.base_price,
+      quantity: data.quantity,
+      image_thumbnail: data.image_thumbnail,
+    });
+
+    return car;
+
+    // const car_id = car.id;
+
+    // const carTranslations = this.carTranslationRepository.create({
+    //   car_id,
+    //   ...data.car_translation,
+    // });
+
+    // const carLocations = this.carLocationRespository.create({
+    //   car_id,
+    //   ...data.car_locations,
+    // });
+
+    // await Promise.all([
+    //   this.carTranslationRepository.insert(carTranslations),
+    //   this.carTypeRepository.save({ car_id, ...data.car_types }),
+    //   this.carImageRepository.save({ car_id, ...data.images }),
+    //   this.carLocationRespository.insert(carLocations),
+    // ]);
+  }
 }
