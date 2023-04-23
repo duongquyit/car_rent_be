@@ -39,7 +39,7 @@ export class Car extends DateTimeEntity {
   quantity: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
-  base_price: string;
+  base_price: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   price: number;
