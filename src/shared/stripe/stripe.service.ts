@@ -33,6 +33,8 @@ export default class StripeService {
     data: CreateSessionDto,
     options: object = {},
   ): Promise<string> {
+    const dorlaExchangeRate = 100;
+
     const session = await this.stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -41,8 +43,9 @@ export default class StripeService {
             currency: this.configService.get<string>('STRIPE_CURRENCY'),
             product_data: {
               name: data.name,
+              images: data.images,
             },
-            unit_amount: data.unit_amount,
+            unit_amount: data.unit_amount * dorlaExchangeRate,
           },
           quantity: data.quantity,
         },
