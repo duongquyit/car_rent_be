@@ -18,6 +18,8 @@ export class MailProcessor {
 
   @OnQueueFailed()
   async listenToQueueFailed(job: Job, error: Error): Promise<void> {
+    console.log(error);
+
     if (job.attemptsMade === job.opts.attempts) {
       await this.mailService.addJobToDLQ(sendMailFailureJob, job);
       await job.remove();

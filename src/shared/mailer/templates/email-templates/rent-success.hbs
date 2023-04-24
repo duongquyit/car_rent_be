@@ -1,16 +1,49 @@
 {{#> email-layout}}
-<p>Dear {{params.bill_name}}!</p><br />
-<p>Thank you for order</p><br />
-<div class='order-information'>
-  <p>Your order details</p>
-  <ul>
-    <li>Order ID: {{params.id}}</li>
-    <li>Customer name: {{params.bill_name}}</li>
-    <li>Phone: {{params.bill_phone_number}}</li>
-    <li>Address: {{params.bill_address}}, {{params.bill_city}}</li>
-    <li>Pick up date: {{params.pick_up_datetime}}</li>
-    <li>Drop off date: {{params.drop_off_datetime}}</li>
-    <li>Status: {{params.status}}</li>
-  </ul>
-</div>
+  <div class="container-fluid w-75 m-auto p-5 bg-white rounded my-5">
+    <img class="d-block my-6 w-16" style="width: 2.5em;" src="https://assets.bootstrapemail.com/logos/light/square.png" />
+    <div class="space-y-4 mb-6">
+      <h3 class="text-4xl fw-800 py-3">Thanks for your order, {{ params.bill_name }}</h3>
+      <p>The estimated delivery time for your order is 6:10 PM - 6:20 PM. Track your order on the
+        <span class="text-primary fw-bolder">MORENT</span> website.</p>
+      <a class="btn btn-red-500 rounded-full px-6 w-full w-lg-48" href="https://app.bootstrapemail.com/templates">Track Your Order</a>
+    </div>
+    <div class="card rounded-3xl p-4">
+      <h3 class="text-center pb-3">Receipt from MORENT</h3>
+      <p class="text-center text-muted">Receipt #{{ param.id }}</p>
+      <table class="p-2 w-full">
+        <tbody>
+          <tr>
+            <td>Customer name</td>
+            <td class="text-right">{{ params.bill_name }}</td>
+          </tr>
+          <tr>
+            <td>Phone</td>
+            <td class="text-right">{{ params.bill_phone_number }}</td>
+          </tr>
+          <tr>
+            <td>Address</td>
+            <td class="text-right">{{ params.bill_address }}, {{ params.bill_city }}</td>
+          </tr>
+          <tr>
+            <td>Pick up date</td>
+            <td class="text-right">{{ params.pick_up_datetime }}</td>
+          </tr>
+          <tr>
+            <td>Drop off date</td>
+            <td class="text-right">{{ params.drop_off_datetime }}</td>
+          </tr>
+          <tr>
+            <td>Status</td>
+            <td class="text-right">{{ params.status }}</td>
+          </tr>
+          <hr class="my-1">
+          <tr>
+            <td class="border-top">Amount paid</td>
+            <td class="text-right border-top">${{ params.total }}</td>
+          </tr>
+          <hr class="my-1">
+        </tbody>
+      </table>
+    </div>
+  </div>
 {{/email-layout}}
