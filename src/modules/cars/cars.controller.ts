@@ -4,7 +4,6 @@ import {
   Get,
   Headers,
   Param,
-  Patch,
   Post,
   Query,
   Req,
@@ -17,7 +16,6 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiHeader,
-  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
@@ -35,11 +33,9 @@ import { AuthRequire } from 'src/common/decorators/public.decorator';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/enums/roles.enum';
 import { RolesGuard } from 'src/common/guards/roles.guard';
-import { UpdateCarDto } from './dto/update-car.dto';
 
 @Controller('cars')
 @ApiTags('Cars')
-@UseInterceptors(CustomCacheInterceptor)
 export class CarsController {
   constructor(
     private readonly carsService: CarsService,
@@ -51,6 +47,7 @@ export class CarsController {
   ) {}
 
   @Get()
+  @UseInterceptors(CustomCacheInterceptor)
   @ApiBearerAuth()
   @ApiQuery({ type: CarsRequestParamsDto })
   @ApiHeader({
@@ -121,11 +118,13 @@ export class CarsController {
     return { id };
   }
 
-  @Patch('/:id')
-  @ApiBearerAuth()
-  @ApiBody({ type: UpdateCarDto })
-  async updateCar(@Body() body: UpdateCarDto, @Param('id') id: number) {
-    console.log(id);
-    console.log(body.car_locations);
+  @Get(':id/datetime-hired')
+  async getCarDatetimeHired(@Param('id') id: number) {
+    const data = await this.carsService.getCarDatetimeHired(id);
+
+    return data.order_details.map((orderDetail) => ({
+      start: orderDetail.pick_up_datetime,
+      end: orderDetail.drop_off_datetime,
+    }));
   }
 }
