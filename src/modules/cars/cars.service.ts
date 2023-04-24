@@ -17,6 +17,7 @@ import {
 } from 'src/common/constants/cars.constant';
 import { PICK_UP, DROP_OFF } from 'src/common/constants/car-locations';
 import {
+  FAILED_STATUS,
   INPROGRESS_STATUS,
   OPEN_STATUS,
   SUCCESS_STATUS,
@@ -265,24 +266,22 @@ export class CarsService {
     });
 
     return car;
+  }
 
-    // const car_id = car.id;
+  async getCarDatetimeHired(id: number) {
+    const queryBuilder = this.carRepository
+      .createQueryBuilder('car')
+      .leftJoin('car.order_details', 'order_details')
+      .leftJoin('order_details.order', 'order')
+      .andWhere('order.status != :failed', {
+        failed: FAILED_STATUS,
+      })
+      .andWhere('car.id = :id', { id })
+      .addSelect([
+        'order_details.pick_up_datetime',
+        'order_details.drop_off_datetime',
+      ]);
 
-    // const carTranslations = this.carTranslationRepository.create({
-    //   car_id,
-    //   ...data.car_translation,
-    // });
-
-    // const carLocations = this.carLocationRespository.create({
-    //   car_id,
-    //   ...data.car_locations,
-    // });
-
-    // await Promise.all([
-    //   this.carTranslationRepository.insert(carTranslations),
-    //   this.carTypeRepository.save({ car_id, ...data.car_types }),
-    //   this.carImageRepository.save({ car_id, ...data.images }),
-    //   this.carLocationRespository.insert(carLocations),
-    // ]);
+    return await queryBuilder.getOne();
   }
 }
