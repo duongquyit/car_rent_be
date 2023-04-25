@@ -1,8 +1,21 @@
-import { Controller, Get, Post, Body, Param, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Res,
+  Query,
+  Header,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Response } from 'express';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { UserDto } from './dto/user.dto';
+import { plainToClass } from 'class-transformer';
+import { UsersDto } from './dto/users.dto';
+import { UserQueryDto } from './dto/user-query.dto';
 
 @Controller('users')
 @ApiTags('Users')
@@ -18,5 +31,17 @@ export class UsersController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
+  }
+
+  @Get()
+  @Header('Access-Control-Expose-Headers', 'Content-Range')
+  async findAll(@Query() query: UserQueryDto): Promise<any> {
+    const { limit, offset } = query;
+    const [users, length] = await this.usersService.findAll(query);
+
+    return plainToClass(UsersDto, {
+      items: users,
+      pagination: { limit, offset, total: length },
+    });
   }
 }

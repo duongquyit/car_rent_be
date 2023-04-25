@@ -295,6 +295,58 @@ export class OrdersService {
     return orders;
   }
 
+  async getRevenue(fromDate: string, toDate: string): Promise<any> {
+    const result = await this.orderDetailRepository
+      .createQueryBuilder('order_details')
+      .select(
+        `YEAR(order_details.pick_up_datetime) AS year, MONTH(order_details.pick_up_datetime) AS month, SUM(orders.total) AS revenue`,
+      )
+      .leftJoin('order_details.order', 'orders')
+      .where('orders.status = :status', { status: 'success' })
+      .andWhere(
+        'order_details.pick_up_datetime BETWEEN :fromDate AND :toDate',
+        { fromDate, toDate },
+      )
+      .groupBy('year, month')
+      .orderBy('year, month', 'ASC')
+      .getRawMany();
+    console.log({ result });
+    return result;
+  }
+
+  async getCurrentAndPreviousMonthRevenue(): Promise<any> {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = currentDate.getFullYear();
+    const previousMonth = currentMonth === 1 ? 12 : currentMonth - 1;
+    const previousYear = currentMonth === 1 ? currentYear - 1 : currentYear;
+    const currentMonthResult = await this.orderDetailRepository
+      .createQueryBuilder('order_details')
+      .select('SUM(orders.total) AS revenue')
+      .leftJoin('order_details.order', 'orders')
+      .where('orders.status = :status', { status: 'success' })
+      .andWhere(
+        'MONTH(order_details.pick_up_datetime) = :currentMonth AND YEAR(order_details.pick_up_datetime) = :currentYear',
+        { currentMonth, currentYear },
+      )
+      .getRawOne();
+    const previousMonthResult = await this.orderDetailRepository
+      .createQueryBuilder('order_details')
+      .select('SUM(orders.total) AS revenue')
+      .leftJoin('order_details.order', 'orders')
+      .where('orders.status = :status', { status: 'success' })
+      .andWhere(
+        'MONTH(order_details.pick_up_datetime) = :previousMonth AND YEAR(order_details.pick_up_datetime) = :previousYear',
+        { previousMonth, previousYear },
+      )
+      .getRawOne();
+    console.log({ currentMonthResult, previousMonthResult });
+    return {
+      currentMonthRevenue: currentMonthResult.revenue,
+      previousMonthRevenue: previousMonthResult.revenue,
+    };
+  }
+
   orderBuilderCommon(queryBuilder: Repository<Order>, lang: string) {
     return queryBuilder
       .createQueryBuilder('orders')

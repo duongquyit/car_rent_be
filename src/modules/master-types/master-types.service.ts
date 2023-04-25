@@ -7,6 +7,7 @@ import {
   OFFSET_DEFAULT,
 } from 'src/common/constants/cars.constant';
 import { CarType } from '../car-types/entities/car-type.entity';
+import { MasterTypeTranslation } from '../master-type-translations/entities/master-type-translation.entity';
 
 @Injectable()
 export class MasterTypesService {
@@ -15,6 +16,8 @@ export class MasterTypesService {
     private masterTypeService: Repository<MasterType>,
     @InjectRepository(CarType)
     private typeService: Repository<CarType>,
+    @InjectRepository(MasterTypeTranslation)
+    private masterTypeTransRepo: Repository<MasterTypeTranslation>,
   ) {}
 
   async findAll(lang: string, query: any) {
@@ -43,6 +46,8 @@ export class MasterTypesService {
 
     const [types, total] = await queryBuilder.getManyAndCount();
 
+    console.log({ result, types, total });
+
     return {
       types: types.map((type) => ({
         ...type,
@@ -50,5 +55,13 @@ export class MasterTypesService {
       })),
       pagination: { limit, offset, total },
     };
+  }
+
+  async getListType(lang = 'en') {
+    const [types, count] = await this.masterTypeTransRepo.findAndCountBy({
+      code: lang,
+    });
+
+    return types;
   }
 }

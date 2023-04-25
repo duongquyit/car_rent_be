@@ -20,7 +20,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { formatCarResponseHelper } from 'src/common/helpers/formart-car-response.helper';
-import { I18nService } from 'nestjs-i18n';
+import { I18n, I18nLang, I18nService } from 'nestjs-i18n';
 import { Request } from 'express';
 import { EN } from 'src/common/constants/language.constant';
 import { CustomCacheInterceptor } from 'src/common/interceptors/custom-cache.interceptor';
@@ -45,6 +45,14 @@ export class CarsController {
     private readonly carTranslationService: CarTranslationsService,
     private readonly carTypeService: CarTypesService,
   ) {}
+
+  @Get('best-rental')
+  async getBestRental(query: any, @I18nLang() lang: string) {
+    console.log({ lang });
+    const bestCar = await this.carsService.getTop1Car(query, lang);
+
+    return bestCar;
+  }
 
   @Get()
   @UseInterceptors(CustomCacheInterceptor)

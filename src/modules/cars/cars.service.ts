@@ -284,4 +284,32 @@ export class CarsService {
 
     return await queryBuilder.getOne();
   }
+
+  async getTop1Car(query: any, lang: string): Promise<any> {
+    const result = await this.carRepository
+      .createQueryBuilder('cars')
+      .leftJoin('cars.order_details', 'order_detail')
+      .leftJoinAndSelect(
+        'cars.car_translation',
+        'car_translation',
+        'car_translation.code = :lang',
+        {
+          lang,
+        },
+      )
+      .select('cars.id, COUNT(order_detail.id)', 'order_count')
+      .addSelect('MAX(car_translation.steering)', 'steering')
+      .addSelect('MAX(car_translation.description)', 'description')
+      .addSelect('MAX(car_translation.name)', 'name')
+      .addSelect('cars.price', 'price')
+      .addSelect('cars.capacity', 'capacity')
+      .addSelect('cars.gasoline', 'gasoline')
+      .addSelect('cars.image_thumbnail', 'image_thumbnail')
+      .groupBy('cars.id')
+      .orderBy('order_count', 'DESC')
+      .limit(1)
+      .getRawOne();
+    console.log(result);
+    return result;
+  }
 }
