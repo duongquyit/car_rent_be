@@ -20,9 +20,9 @@ import {
 } from 'src/common/helpers/order-detail-response.helper';
 import { MailService } from '../../shared/mailer/mail.service';
 import { AuthRequire } from 'src/common/decorators/public.decorator';
-import { UsersService } from '../users/users.service';
-import { User } from '../users/entities/user.entity';
 import { EN } from 'src/common/constants/language.constant';
+import { SUCCESS_STATUS } from 'src/common/constants/order.constant';
+import { User } from '@sentry/node';
 
 @Controller('orders')
 @ApiTags('Orders')
@@ -32,7 +32,6 @@ import { EN } from 'src/common/constants/language.constant';
 export class OrdersController {
   constructor(
     private readonly ordersService: OrdersService,
-    private readonly usersService: UsersService,
     private readonly mailService: MailService,
     private readonly i18nService: I18nService,
   ) {}
@@ -40,8 +39,11 @@ export class OrdersController {
   @Post()
   async create(@Body() createOrderDto: CreateOrderDto, @Req() req: Request) {
     const order = await this.ordersService.create(createOrderDto, req.user);
-    const user: User = await this.usersService.findOne(order.user_id);
-    await this.mailService.addSendMailJobToQueue(user.email, order);
+    const user = req.user as User;
+
+    if (order.status === SUCCESS_STATUS) {
+      await this.mailService.addSendMailJobToQueue(user.email, order);
+    }
 
     return { id: order.id };
   }

@@ -36,15 +36,20 @@ export class AuthService {
         },
       ],
     });
+
     if (!user) {
       throw new BadRequestException('user.CFO-0015');
     }
+
     const isMatch = decodePassword(createAuthDto.password, user.password);
+
     if (!isMatch) {
       throw new BadRequestException('user.CFO-0015');
     }
 
-    return { user_id: user.id, role: user.position };
+    delete user.password;
+
+    return user;
   }
 
   async signin(payload: any) {

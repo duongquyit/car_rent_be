@@ -63,7 +63,7 @@ export class OrdersService {
       payOut,
     );
 
-    this.validateTotalCostWithCurrentCost(total, subTotal);
+    // this.validateTotalCostWithCurrentCost(total, subTotal);
 
     const newOrder: Order = await this.orderRepository.save({
       user_id,
