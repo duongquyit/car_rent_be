@@ -11,6 +11,7 @@ import {
 import { Transaction } from 'src/shared/stripe/entities/transaction.entity';
 import { encrypt } from 'src/common/helpers/crypto.helper';
 import { Order } from 'src/modules/orders/entities/order.entity';
+import { MailService } from '../mailer/mail.service';
 
 @Injectable()
 export default class StripeService {
@@ -23,6 +24,7 @@ export default class StripeService {
     private transactionRepository: Repository<Transaction>,
     @InjectRepository(Order)
     private orderRepository: Repository<Order>,
+    private mailerService: MailService,
   ) {
     this.stripe = new Stripe(configService.get<string>('STRIPE_SECRET_KEY'), {
       apiVersion: '2022-11-15',
@@ -50,7 +52,7 @@ export default class StripeService {
           quantity: data.quantity,
         },
       ],
-      metadata: data.metadata || {},
+      metadata: { ...data.metadata, customer_email: data.customer_email } || {},
       mode: 'payment',
       success_url: this.configService.get<string>('STRIPE_SUCCESS_URL'),
       cancel_url: this.configService.get<string>('STRIPE_CANCEL_URL'),
@@ -90,7 +92,8 @@ export default class StripeService {
         }
         case 'payment_intent.succeeded':
           console.log('Payment succeeded');
-          await Promise.all([
+          const [order] = await Promise.all([
+            this.orderRepository.findOne({ where: { id: order_id } }),
             this.transactionRepository.save({
               order_id,
               status: SUCCESS_STATUS,
@@ -101,6 +104,12 @@ export default class StripeService {
               { status: SUCCESS_STATUS },
             ),
           ]);
+
+          await this.mailerService.addSendMailJobToQueue(
+            this.order.customer_email,
+            order,
+          );
+
           break;
         case 'payment_intent.payment_failed':
           console.log('Payment failed');
