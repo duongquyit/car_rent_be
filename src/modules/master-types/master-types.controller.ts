@@ -35,4 +35,11 @@ export class MasterTypesController {
       pagination,
     };
   }
+
+  @Get('list')
+  async getList() {
+    const listTypes = await this.masterTypesService.getListType();
+
+    return listTypes;
+  }
 }

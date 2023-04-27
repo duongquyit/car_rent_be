@@ -7,12 +7,13 @@ import {
   Get,
   Param,
   Headers,
+  Query,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { ApiBearerAuth, ApiHeader, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
-import { Request } from 'express';
+import { Request, query } from 'express';
 import { I18nService } from 'nestjs-i18n';
 import {
   formatOrderResponse,
@@ -46,6 +47,31 @@ export class OrdersController {
     }
 
     return { id: order.id };
+  }
+
+  @Get('revenue')
+  async getRevenue(@Query() query: any) {
+    const revenue = await this.ordersService.getRevenue(
+      query.fromDate,
+      query.toDate,
+    );
+
+    const groupedData = revenue.reduce((acc, curr) => {
+      const key = `${curr.year}-${curr.month}`;
+      acc[key] = acc[key] || { year: curr.year, month: curr.month, revenue: 0 };
+      acc[key].revenue += parseFloat(curr.revenue);
+      return acc;
+    }, {});
+
+    return Object.values(groupedData);
+  }
+
+  @Get('compare-revenue')
+  async getCompareRevenue(@Query() query: any) {
+    const revenue =
+      await this.ordersService.getCurrentAndPreviousMonthRevenue();
+
+    return revenue;
   }
 
   @Get(':id')

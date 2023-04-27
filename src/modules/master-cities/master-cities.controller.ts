@@ -18,4 +18,10 @@ export class MasterCitiesController {
     const cities = await this.masterCitiesService.findAll(query);
     return { items: cities };
   }
+
+  @Get('dashboard')
+  async dashboard(@Query() query: any) {
+    const cities = await this.masterCitiesService.findAll(query);
+    return { items: cities };
+  }
 }

@@ -2,8 +2,11 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { encodePassword } from 'src/common/helpers/bcrypt-hash.helper';
+import { UserDto } from './dto/user.dto';
+import { instanceToPlain } from 'class-transformer';
+import { UserQueryDto } from './dto/user-query.dto';
 
 @Injectable()
 export class UsersService {
@@ -29,5 +32,10 @@ export class UsersService {
     if (id) {
       return await this.userRepository.findOne({ where: { id } });
     }
+  }
+
+  async findAll(options?: UserQueryDto): Promise<any> {
+    const { limit: take, offset: skip } = options;
+    return await this.userRepository.findAndCount({ skip, take });
   }
 }

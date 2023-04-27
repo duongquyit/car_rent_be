@@ -35,6 +35,7 @@ import { AppExceptionFilter } from './common/exception-filters/app.exception-fil
 import { EN, JA } from './common/constants/language.constant';
 import * as redisStore from 'cache-manager-redis-store';
 import { StripeModule } from './shared/stripe/stripe.module';
+import { ContentRangeMiddleware } from './common/middleware/content-range.middleware';
 
 @Module({
   imports: [
