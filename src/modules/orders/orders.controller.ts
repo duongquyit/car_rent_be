@@ -51,7 +51,6 @@ export class OrdersController {
 
   @Get('revenue')
   async getRevenue(@Query() query: any) {
-    console.log({ query });
     const revenue = await this.ordersService.getRevenue(
       query.fromDate,
       query.toDate,
@@ -69,7 +68,6 @@ export class OrdersController {
 
   @Get('compare-revenue')
   async getCompareRevenue(@Query() query: any) {
-    console.log({ query });
     const revenue =
       await this.ordersService.getCurrentAndPreviousMonthRevenue();
 

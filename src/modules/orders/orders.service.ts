@@ -310,7 +310,6 @@ export class OrdersService {
       .groupBy('year, month')
       .orderBy('year, month', 'ASC')
       .getRawMany();
-    console.log({ result });
     return result;
   }
 
@@ -340,7 +339,7 @@ export class OrdersService {
         { previousMonth, previousYear },
       )
       .getRawOne();
-    console.log({ currentMonthResult, previousMonthResult });
+
     return {
       currentMonthRevenue: currentMonthResult.revenue,
       previousMonthRevenue: previousMonthResult.revenue,

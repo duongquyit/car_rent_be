@@ -46,8 +46,6 @@ export class MasterTypesService {
 
     const [types, total] = await queryBuilder.getManyAndCount();
 
-    console.log({ result, types, total });
-
     return {
       types: types.map((type) => ({
         ...type,

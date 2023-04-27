@@ -309,7 +309,6 @@ export class CarsService {
       .orderBy('order_count', 'DESC')
       .limit(1)
       .getRawOne();
-    console.log(result);
     return result;
   }
 }
