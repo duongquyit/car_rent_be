@@ -1,4 +1,11 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import {
+  CacheInterceptor,
+  CacheTTL,
+  Controller,
+  Get,
+  Query,
+  UseInterceptors,
+} from '@nestjs/common';
 import { MasterCitiesService } from './master-cities.service';
 import { TransformPlainToInstance } from 'class-transformer';
 import { MasterCitiesDto } from './dto/master-cities.dto';
@@ -12,6 +19,8 @@ export class MasterCitiesController {
   constructor(private readonly masterCitiesService: MasterCitiesService) {}
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(3600 * 24)
   @ApiQuery({ type: MasterCityQueryParamsDto })
   @TransformPlainToInstance(MasterCitiesDto)
   async findAll(@Query() query: Request) {

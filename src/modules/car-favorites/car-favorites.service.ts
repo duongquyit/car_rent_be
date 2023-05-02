@@ -22,7 +22,7 @@ export class CarFavoritesService {
     createCarFavoriteDto: CreateCarFavoriteDto,
     user,
   ): Promise<CarFavorite> {
-    const user_id: number = user.user_id;
+    const user_id: number = user.id;
     const car_id = createCarFavoriteDto.car_id;
 
     return await this.carFavoriteRepository.save({
@@ -32,7 +32,7 @@ export class CarFavoritesService {
   }
 
   async remove(id: number, user) {
-    const user_id: number = user.user_id;
+    const user_id: number = user.id;
     const favorites: CarFavorite[] = await this.carFavoriteRepository.findBy({
       car_id: id,
       user_id,
@@ -53,8 +53,8 @@ export class CarFavoritesService {
     );
     queryBuilder
       .innerJoin('cars.favorites', 'favorites')
-      .innerJoinAndSelect('favorites.user', 'user', 'user.id = :user_id', {
-        user_id: user.user_id,
+      .innerJoinAndSelect('favorites.user', 'user', 'user.id = :id', {
+        id: user.id,
       })
       .addSelect(SELECT_CAR_FAVORITES_COL)
       .limit(limit)

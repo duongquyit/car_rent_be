@@ -14,7 +14,7 @@ export class OauthRefreshTokenService {
   ) {}
 
   async refreshToken(refreshToken: any) {
-    const { refresh_token_id, user_id } = await this.jwtService.verifyAsync(
+    const { refresh_token_id, id } = await this.jwtService.verifyAsync(
       refreshToken,
       {
         secret: process.env.RT_SECRET_KEY,
@@ -24,7 +24,7 @@ export class OauthRefreshTokenService {
     const oauthRefreshToken = await this.oauthRefreshTokenRepository.findOne({
       where: {
         refresh_token: refresh_token_id,
-        user_id: user_id,
+        user_id: id,
         created_at: null,
       },
     });
@@ -33,7 +33,7 @@ export class OauthRefreshTokenService {
       throw new UnauthorizedException('user.CUS-0403');
     }
     const { createRTDto, responseToken } = await signToken(
-      { user_id },
+      { user_id: id },
       this.jwtService,
     );
     await this.oauthRefreshTokenRepository.save(createRTDto);

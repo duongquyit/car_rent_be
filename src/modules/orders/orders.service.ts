@@ -37,7 +37,7 @@ export class OrdersService {
     const { billing_info, payment_method, rental_info, car_id, total } =
       createOrderDto;
 
-    const user_id: number = user.user_id;
+    const user_id: number = user.id;
 
     const [car] = await Promise.all([
       this.checkCarExists(+car_id),
@@ -63,7 +63,7 @@ export class OrdersService {
       payOut,
     );
 
-    // this.validateTotalCostWithCurrentCost(total, subTotal);
+    this.validateTotalCostWithCurrentCost(total, subTotal);
 
     const newOrder: Order = await this.orderRepository.save({
       user_id,
@@ -288,7 +288,7 @@ export class OrdersService {
   async getOrdersDetail(user: any, lang: string): Promise<any> {
     const queryBuilder = this.orderBuilderCommon(this.orderRepository, lang);
     queryBuilder.innerJoin('orders.user', 'user', 'user.id = :user_id', {
-      user_id: user.user_id,
+      user_id: user.id,
     });
     const orders = await queryBuilder.getMany();
 

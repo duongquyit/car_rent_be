@@ -60,7 +60,7 @@ export class CarsService {
     queryBuilder
       .leftJoin('cars.order_details', 'order_details')
       .leftJoin('cars.favorites', 'favorites', 'favorites.user_id = :user_id', {
-        user_id: user.user_id,
+        user_id: user.id,
       })
       .addSelect(SELECT_CAR_FAVORITES_COL);
 
@@ -221,7 +221,7 @@ export class CarsService {
     queryBuilder
       .leftJoin('cars.car_images', 'car_images')
       .leftJoin('cars.favorites', 'favorites', 'favorites.user_id = :user_id', {
-        user_id: user.user_id,
+        user_id: user.id,
       })
       .addSelect([
         ...SELECT_CAR_IMAGES_COL,

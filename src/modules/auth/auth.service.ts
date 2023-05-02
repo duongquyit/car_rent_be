@@ -67,10 +67,10 @@ export class AuthService {
   }
 
   async logout(payload: any) {
-    const { user_id, refresh_token_id } = payload;
+    const { id, refresh_token_id } = payload;
 
     const refreshToken = await this.oauthRefreshTokenRepository.findOne({
-      where: { user_id, deleted_at: null, refresh_token: refresh_token_id },
+      where: { user_id: id, deleted_at: null, refresh_token: refresh_token_id },
     });
 
     if (!refreshToken) {
@@ -82,9 +82,8 @@ export class AuthService {
   }
 
   async getUser(user: any): Promise<User> {
-    const userId = user.user_id;
     const userInfor = await this.userRepository.findOne({
-      where: { id: userId },
+      where: { id: user.id },
     });
 
     return userInfor;
@@ -93,7 +92,7 @@ export class AuthService {
   async userIsLogout(user: any): Promise<boolean> {
     const isExists = await this.oauthRefreshTokenRepository.exist({
       where: {
-        user_id: user.user_id,
+        user_id: user.id,
         refresh_token: user.refresh_token_id,
       },
     });

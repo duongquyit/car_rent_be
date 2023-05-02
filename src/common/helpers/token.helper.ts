@@ -18,7 +18,7 @@ export const signToken = async (payload: any, jwtService: any) => {
 
   const createRTDto: CreateOauthRefreshTokenDto = {
     refresh_token: randomUUID,
-    user_id: payload.user_id,
+    user_id: payload.id,
     expired_in: process.env.RT_EXPIRES_TIME,
   };
 

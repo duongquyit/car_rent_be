@@ -1,4 +1,12 @@
-import { Controller, Get, Headers, Query } from '@nestjs/common';
+import {
+  CacheInterceptor,
+  CacheTTL,
+  Controller,
+  Get,
+  Headers,
+  Query,
+  UseInterceptors,
+} from '@nestjs/common';
 import { MasterTypesService } from './master-types.service';
 import { ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { I18nService } from 'nestjs-i18n';
@@ -15,6 +23,8 @@ export class MasterTypesController {
   ) {}
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(3600 * 24)
   @ApiQuery({ type: PaginateDTO })
   @ApiHeader({ name: 'accept-language', required: false })
   async findAll(

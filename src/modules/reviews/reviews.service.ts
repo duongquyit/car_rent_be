@@ -58,7 +58,7 @@ export class ReviewsService {
     }
 
     return await this.reviewRepository.save({
-      user_id: auth.user_id,
+      user_id: auth.id,
       ...reviewData,
     });
   }
