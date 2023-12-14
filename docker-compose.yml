@@ -1,0 +1,29 @@
+version: '3.5'
+services:
+  app:
+    build: .
+    command: yarn start:dev
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - /app/node_modules
+      - .:/app
+
+  db:
+    image: mysql:8.0
+    command: [--default-authentication-plugin=mysql_native_password]
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - '33063:3306'
+    volumes:
+      - ./docker/db:/var/lib/mysql
+
+  redis:
+    image: redis:latest
+    ports:
+      - 63791:6379

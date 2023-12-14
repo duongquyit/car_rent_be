@@ -35,7 +35,6 @@ import { AppExceptionFilter } from './common/exception-filters/app.exception-fil
 import { EN, JA } from './common/constants/language.constant';
 import * as redisStore from 'cache-manager-redis-store';
 import { StripeModule } from './shared/stripe/stripe.module';
-import { ContentRangeMiddleware } from './common/middleware/content-range.middleware';
 
 @Module({
   imports: [
@@ -43,21 +42,19 @@ import { ContentRangeMiddleware } from './common/middleware/content-range.middle
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
-      useFactory: (): DataSourceOptions => {
-        return {
-          type: 'mysql',
-          host: process.env.DB_HOST,
-          port: +process.env.DB_PORT,
-          username: process.env.DB_USER,
-          password: process.env.DB_PASSWORD,
-          database: process.env.DB_NAME,
-          entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-          migrations: [__dirname + '/migrations/*.js'],
-          migrationsRun: true,
-          synchronize: false,
-          logging: true,
-        };
-      },
+      useFactory: (): DataSourceOptions => ({
+        type: 'mysql',
+        host: process.env.DB_HOST,
+        port: +process.env.DB_PORT,
+        username: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
+        entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+        migrations: [__dirname + '/migrations/*.js'],
+        migrationsRun: true,
+        synchronize: false,
+        logging: true,
+      }),
     }),
     I18nModule.forRootAsync({
       useFactory: async () => ({
@@ -93,6 +90,7 @@ import { ContentRangeMiddleware } from './common/middleware/content-range.middle
     CacheModule.registerAsync({
       inject: [ConfigService],
       isGlobal: true,
+      extraProviders: [],
       useFactory: (configService: ConfigService) => ({
         store: redisStore,
         ttl: configService.get<number>('REDIS_CACHE_TTL'),

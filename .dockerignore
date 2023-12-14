@@ -1,0 +1,4 @@
+# Build dependencies
+dist
+node_modules
+coverage
